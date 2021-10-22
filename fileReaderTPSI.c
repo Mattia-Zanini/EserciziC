@@ -3,6 +3,7 @@
 #include <string.h>
 
 int fsize(FILE *in_file);
+int searchCharacter(int fileSize, char *buff, char toFind);
 
 int main(int argc, char *argv[])
 {
@@ -21,8 +22,13 @@ int main(int argc, char *argv[])
         else
         {
             printf("File trovato e aperto\n");
-            int fileSize = fsize(in_file) - 1;//meno l'EOF
-            printf("Il File ha una lunghezza pari a: %d\n", fileSize);
+            int fileSize = fsize(in_file);
+            printf("Il file ha un quantitativo di caratteri pari a: %d\n", fileSize - 1); //meno l'EOF
+            char buff[fileSize];
+            fgets(buff, fileSize, in_file);
+            char toFind = argv[2][0];
+            int nChars = searchCharacter(fileSize, buff, toFind);
+            printf("Nel file sono presenti: %d caratteri uguali a %c\n", nChars, toFind); //meno l'EOF
             fclose(in_file);
             printf("File chiuso\n");
         }
@@ -41,4 +47,14 @@ int fsize(FILE *in_file)
     int sz = ftell(in_file);
     fseek(in_file, prev, SEEK_SET); //go back to where we were
     return sz;
+}
+int searchCharacter(int fileSize, char *buff, char toFind)
+{
+    int nChar = 0;
+    for (int i = 0; i < fileSize - 1; i++)
+    {
+        if(buff[i] == toFind)
+            nChar++;
+    }
+    return nChar;
 }
