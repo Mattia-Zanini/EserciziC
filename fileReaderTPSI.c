@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void GetPath(char *argv[], int pathLenght, char path[]);
+int fsize(FILE *in_file);
 
 int main(int argc, char *argv[])
 {
@@ -10,27 +10,21 @@ int main(int argc, char *argv[])
     {
         //cerca un carattere
         printf("Cerco un carattere\n");
-        FILE *fp;
-        //ritaglio percorso file
-        int pathLenght = strlen(argv[0]);
-        char path[pathLenght - 19];
-        GetPath(argv, pathLenght, path);
-        //inizializzo l'array che conterrà il percorso completo
-        char fileIN[] = "";
-        //aggiungo il percorso ritagliato e il nome del file
-        strcat(fileIN, path);
-        strcat(fileIN, argv[1]);
-        printf("Questo e' il percorso completo: %s\n", fileIN);
-        //controllo se c'è il file
-        if ((fp = fopen(argv[1], "r")) == NULL)
+        char *path = realpath(argv[1], NULL); //ottiene il percorso del file
+        FILE *in_file = fopen(path, "r");     // read only
+        free(path);
+        if (in_file == NULL)
         {
             printf("File %s non trovato o impossibile da aprire\n", argv[1]);
             exit(1);
         }
         else
         {
-            printf("File trovato e aperto");
-            fclose(fp);
+            printf("File trovato e aperto\n");
+            int fileSize = fsize(in_file) - 1;//meno l'EOF
+            printf("Il File ha una lunghezza pari a: %d\n", fileSize);
+            fclose(in_file);
+            printf("File chiuso\n");
         }
         return 0;
     }
@@ -40,18 +34,11 @@ int main(int argc, char *argv[])
         printf("Cerco una parola\n");
     }
 }
-void GetPath(char *argv[], int pathLenght, char path[])
+int fsize(FILE *in_file)
 {
-    char fullPath[pathLenght];
-    strcpy(fullPath, argv[0]);
-    for (int i = 0; i < pathLenght - 19; i++)
-    {
-        path[i] = fullPath[i];
-        printf("%c\n", path[i]);
-        if(i = (pathLenght - 19)){
-            printf("prova\n");
-        }
-    }
-    printf("Questo e' il percorso ritagliato: %s\n", path);
-    printf("Questo e' il percorso assoluto: %s\n", argv[0]);
+    int prev = ftell(in_file);
+    fseek(in_file, 0L, SEEK_END);
+    int sz = ftell(in_file);
+    fseek(in_file, prev, SEEK_SET); //go back to where we were
+    return sz;
 }
