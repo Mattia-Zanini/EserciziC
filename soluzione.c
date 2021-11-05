@@ -73,6 +73,14 @@ int main(int argc, char *argv[])
         fscanf(stream, "%s\t", stringa[numParole]);
     }
 
+    /* VARIAZIONE
+    while (!feof(stream))
+    {
+        fscanf(stream, "%s\t", stringa[numParole]);
+        numParole++;
+    }
+    */
+
     fclose(stream);
 
     switch (argv[3][1])
