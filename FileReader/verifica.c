@@ -45,6 +45,10 @@ int main(int argc, char *argv[])
     {
         printf("Argomenti errati\n");
     }
+    else if (argv[4][0] == argv[5][0])
+    {
+        printf("Non ha senso cambiare un carattere con un medesimo uguale\n");
+    }
     else
     {
         FILE *input;
