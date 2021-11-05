@@ -99,8 +99,8 @@ int main(int argc, char *argv[])
     {
         char toUP[1];
         toUP[0] = argv[1][0];
-        int fd[2];
-        int pipeStatus = pipe(fd); //crea una coppia di file descriptor, utilizzabili per una 'pipe'
+        int fd[2];                 // fs[0] == lettura, fd[1] == scrittura
+        int pipeStatus = pipe(fd); //crea una coppia di file descriptor, utilizzabili per una 'pipe', ovvero un tunnel dove i due processi comunicano
         if (pipeStatus == 0)       //il pipe ha successo
         {
             int PID = fork();
