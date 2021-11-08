@@ -53,9 +53,9 @@ PERSONA_T inserisci(int nPersona)
 {
     PERSONA_T p;
     printf("Inserisci un nome per la persona n°%d\nIl nome deve avere un massimo di 10 caratteri\n", nPersona);
-    scanf("%s", p.nome);
+    scanf("%s", &p.nome);
     printf("\nInserisci un cognome per la persona n°%d\nIl cognome deve avere un massimo di 10 caratteri\n", nPersona);
-    scanf("%s", p.cognome);
+    scanf("%s", &p.cognome);
     printf("\nInserisci un età per la persona n°%d\n", nPersona);
     scanf("%d", &p.eta);
     printf("\n");
