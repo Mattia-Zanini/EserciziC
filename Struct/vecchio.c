@@ -4,8 +4,18 @@
 
 #include <stdio.h>
 
+/// \param  DIM: dimensione dell'array PERSONA_T, ovverosia il numero di persone
+/// \param  MAX_CHAR: è il numero massimo di caratteri che il nome e il cognome possono rispettivamente contenere
+
 #define DIM 4
 #define MAX_CHAR 10
+
+/**
+ *  \brief  struct di nome: "PERSONA_T", ogni persona ha un nome, cognome ed età
+ *  \param  char nome[MAX_CHAR]: indica il nome della persona
+ *  \param  char cognome[MAX_CHAR]: indica il cognome della persona
+ *  \param  int eta: indica l'età della persona
+ */
 
 typedef struct
 {
@@ -13,13 +23,11 @@ typedef struct
     char cognome[MAX_CHAR];
     int eta;
 } PERSONA_T;
+
 /**
  *  \fn     void vecchio(PERSONA_T *persone)
  *  \brief  funzione che ricevendo come parametro il puntatore dell'array "persone" trova la persona più vecchia tra quelle inserite nell'array
  *  \param  PERSONA_T *persone: puntatore dell'array persone, contenuto nel main
- *  \date   8/11/2021
- *  \author Mattia Zanini
- *  \file   vecchio.c
  */
 
 void vecchio(PERSONA_T *persone)
@@ -44,9 +52,6 @@ void vecchio(PERSONA_T *persone)
  *  \brief  funzione che avvisa l'utente dei dati da inserire, rispettivamente della persona pari al valore int passato per parametro, e prende in input i dati che l'utente fornisce
  *  \param  int nPersona: valore int del ciclo for con la quale viene chaiamta questa funzione, ovvero il numero della persona da inserire
  *  \return PERSONA_T: la funzione ritorna una variabile complessa
- *  \date   8/11/2021
- *  \author Mattia Zanini
- *  \file   vecchio.c
  */
 
 PERSONA_T inserisci(int nPersona)
@@ -66,9 +71,6 @@ PERSONA_T inserisci(int nPersona)
  *  \fn     int main()
  *  \brief  funzione principale, dove viene creato l'array della variabile complessa "PERSONA_T" di dimensione pari a 4 "DIM", chiamando successivamente le altre funzioni necessarie per svolgere il compito del programma
  *  \return int: indica come è terminato il programma
- *  \date   8/11/2021
- *  \author Mattia Zanini
- *  \file   vecchio.c
  */
 
 int main()
