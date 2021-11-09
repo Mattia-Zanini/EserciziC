@@ -1,13 +1,12 @@
-//  \file   vecchio.c
-//  \brief  mostra a schermo il più vecchio tra le 4 persone prese in input dall'utente
-//  \date   Il file è stato creato l'8/11/2021
+///  \file   vecchio.c
+///  \brief  mostra a schermo il più vecchio tra le 4 persone prese in input dall'utente
+///  \date   Il file è stato creato l'8/11/2021
 
 #include <stdio.h>
 
 /// \param  DIM: dimensione dell'array PERSONA_T, ovverosia il numero di persone
-/// \param  MAX_CHAR: è il numero massimo di caratteri che il nome e il cognome possono rispettivamente contenere
-
 #define DIM 4
+/// \param  MAX_CHAR: è il numero massimo di caratteri che il nome e il cognome possono rispettivamente contenere
 #define MAX_CHAR 10
 
 /**

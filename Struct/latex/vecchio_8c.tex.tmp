@@ -1,5 +1,10 @@
 \hypertarget{vecchio_8c}{}\doxysection{vecchio.\+c File Reference}
 \label{vecchio_8c}\index{vecchio.c@{vecchio.c}}
+
+
+mostra a schermo il più vecchio tra le 4 persone prese in input dall\textquotesingle{}utente  
+
+
 {\ttfamily \#include $<$stdio.\+h$>$}\newline
 Include dependency graph for vecchio.\+c\+:
 % FIG 0
@@ -7,15 +12,13 @@ Include dependency graph for vecchio.\+c\+:
 \begin{DoxyCompactItemize}
 \item 
 struct \mbox{\hyperlink{structPERSONA__T}{P\+E\+R\+S\+O\+N\+A\+\_\+T}}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em struct di nome\+: \char`\"{}\+P\+E\+R\+S\+O\+N\+A\+\_\+\+T\char`\"{}, ogni persona ha un nome, cognome ed età \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{vecchio_8c_ac25189db92959bff3c6c2adf4c34b50a}\label{vecchio_8c_ac25189db92959bff3c6c2adf4c34b50a}} 
-\#define {\bfseries D\+IM}~4
+\#define \mbox{\hyperlink{vecchio_8c_ac25189db92959bff3c6c2adf4c34b50a}{D\+IM}}~4
 \item 
-\mbox{\Hypertarget{vecchio_8c_a82acb32225c05e9aa4c524c40bc5852a}\label{vecchio_8c_a82acb32225c05e9aa4c524c40bc5852a}} 
-\#define {\bfseries M\+A\+X\+\_\+\+C\+H\+AR}~10
+\#define \mbox{\hyperlink{vecchio_8c_a82acb32225c05e9aa4c524c40bc5852a}{M\+A\+X\+\_\+\+C\+H\+AR}}~10
 \end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
@@ -26,6 +29,39 @@ void \mbox{\hyperlink{vecchio_8c_af25a087796f90ead3413ad20bf1d7785}{vecchio}} (\
 \begin{DoxyCompactList}\small\item\em funzione che avvisa l\textquotesingle{}utente dei dati da inserire, rispettivamente della persona pari al valore int passato per parametro, e prende in input i dati che l\textquotesingle{}utente fornisce \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{vecchio_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
 \begin{DoxyCompactList}\small\item\em funzione principale, dove viene creato l\textquotesingle{}array della variabile complessa \char`\"{}\+P\+E\+R\+S\+O\+N\+A\+\_\+\+T\char`\"{} di dimensione pari a 4 \char`\"{}\+D\+I\+M\char`\"{}, chiamando successivamente le altre funzioni necessarie per svolgere il compito del programma \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+mostra a schermo il più vecchio tra le 4 persone prese in input dall\textquotesingle{}utente 
+
+\begin{DoxyDate}{Date}
+Il file è stato creato l\textquotesingle{}8/11/2021 
+\end{DoxyDate}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{vecchio_8c_ac25189db92959bff3c6c2adf4c34b50a}\label{vecchio_8c_ac25189db92959bff3c6c2adf4c34b50a}} 
+\index{vecchio.c@{vecchio.c}!DIM@{DIM}}
+\index{DIM@{DIM}!vecchio.c@{vecchio.c}}
+\doxysubsubsection{\texorpdfstring{DIM}{DIM}}
+{\footnotesize\ttfamily \#define D\+IM~4}
+
+
+\begin{DoxyParams}{Parameters}
+{\em D\+IM} & dimensione dell\textquotesingle{}array \mbox{\hyperlink{structPERSONA__T}{P\+E\+R\+S\+O\+N\+A\+\_\+T}}, ovverosia il numero di persone \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{vecchio_8c_a82acb32225c05e9aa4c524c40bc5852a}\label{vecchio_8c_a82acb32225c05e9aa4c524c40bc5852a}} 
+\index{vecchio.c@{vecchio.c}!MAX\_CHAR@{MAX\_CHAR}}
+\index{MAX\_CHAR@{MAX\_CHAR}!vecchio.c@{vecchio.c}}
+\doxysubsubsection{\texorpdfstring{MAX\_CHAR}{MAX\_CHAR}}
+{\footnotesize\ttfamily \#define M\+A\+X\+\_\+\+C\+H\+AR~10}
+
+
+\begin{DoxyParams}{Parameters}
+{\em M\+A\+X\+\_\+\+C\+H\+AR} & è il numero massimo di caratteri che il nome e il cognome possono rispettivamente contenere \\
+\hline
+\end{DoxyParams}
 
 
 \doxysubsection{Function Documentation}
@@ -47,12 +83,6 @@ funzione che avvisa l\textquotesingle{}utente dei dati da inserire, rispettivame
 \begin{DoxyReturn}{Returns}
 \mbox{\hyperlink{structPERSONA__T}{P\+E\+R\+S\+O\+N\+A\+\_\+T}}\+: la funzione ritorna una variabile complessa 
 \end{DoxyReturn}
-\begin{DoxyDate}{Date}
-8/11/2021 
-\end{DoxyDate}
-\begin{DoxyAuthor}{Author}
-Mattia Zanini 
-\end{DoxyAuthor}
 \mbox{\Hypertarget{vecchio_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{vecchio_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}} 
 \index{vecchio.c@{vecchio.c}!main@{main}}
 \index{main@{main}!vecchio.c@{vecchio.c}}
@@ -66,12 +96,6 @@ funzione principale, dove viene creato l\textquotesingle{}array della variabile 
 \begin{DoxyReturn}{Returns}
 int\+: indica come è terminato il programma 
 \end{DoxyReturn}
-\begin{DoxyDate}{Date}
-8/11/2021 
-\end{DoxyDate}
-\begin{DoxyAuthor}{Author}
-Mattia Zanini 
-\end{DoxyAuthor}
 \mbox{\Hypertarget{vecchio_8c_af25a087796f90ead3413ad20bf1d7785}\label{vecchio_8c_af25a087796f90ead3413ad20bf1d7785}} 
 \index{vecchio.c@{vecchio.c}!vecchio@{vecchio}}
 \index{vecchio@{vecchio}!vecchio.c@{vecchio.c}}
@@ -87,9 +111,3 @@ funzione che ricevendo come parametro il puntatore dell\textquotesingle{}array \
 {\em \mbox{\hyperlink{structPERSONA__T}{P\+E\+R\+S\+O\+N\+A\+\_\+T}}} & $\ast$persone\+: puntatore dell\textquotesingle{}array persone, contenuto nel main \\
 \hline
 \end{DoxyParams}
-\begin{DoxyDate}{Date}
-8/11/2021 
-\end{DoxyDate}
-\begin{DoxyAuthor}{Author}
-Mattia Zanini 
-\end{DoxyAuthor}

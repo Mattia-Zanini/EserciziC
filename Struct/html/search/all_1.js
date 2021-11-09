@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['main_1',['main',['../vecchio_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'vecchio.c']]]
+  ['inserisci_1',['inserisci',['../vecchio_8c.html#a244b4c4f30a36b33158a3e43cfccc280',1,'vecchio.c']]]
 ];
