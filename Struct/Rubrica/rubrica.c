@@ -39,17 +39,11 @@ void MostraRubrica(char filename[], FILE *rubrica_input, int righe)
         exit(1);
     }
     PERSONA_T persone[righe];
-    int pos = 0;
-    while (!feof(rubrica_input))
-    {
-        fscanf(rubrica_input, "%s %s %s", persone[pos].nome, persone[pos].cognome, persone[pos].numeroTelefonico);
-        pos++;
-    }
+    for (int i = 0; !feof(rubrica_input); i++)
+        fscanf(rubrica_input, "%s %s %s", persone[i].nome, persone[i].cognome, persone[i].numeroTelefonico);
     fclose(rubrica_input);
     for (int i = 0; i < righe; i++)
-    {
         printf("%s %s %s\n", persone[i].nome, persone[i].cognome, persone[i].numeroTelefonico);
-    }
 }
 
 int main(int argc, char *argv[])
