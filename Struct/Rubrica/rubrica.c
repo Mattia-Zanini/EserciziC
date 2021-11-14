@@ -1,9 +1,22 @@
+///  \file   rubrica.c
+///  \brief  gestisce una rubrica, mostra, aggiunge e rimuove contatti dalla rubrica
+///  \date   Il file è stato creato l'12/11/2021
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+/// \param  MAX_CHAR: dimensione massima dei caratteri che il nome e cognome possono avere
 #define MAX_CHAR 10
+/// \param  SINGLE_LINE: dimensione massima di una riga, sul file (\n incluso)
 #define SINGLE_LINE 33
+
+/**
+ *  \brief  struct di nome: "PERSONA_T", ogni persona ha un nome, cognome e un numero di telefono
+ *  \param  char nome[MAX_CHAR]: indica il nome della persona
+ *  \param  char cognome[MAX_CHAR]: indica il cognome della persona
+ *  \param  char numeroTelefonico[10]: indica il numero di telefono della persona
+ */
 
 typedef struct
 {
@@ -11,6 +24,13 @@ typedef struct
     char cognome[MAX_CHAR];
     char numeroTelefonico[10];
 } PERSONA_T;
+
+/**
+ *  \fn     int ContaRighe(FILE *rubrica, char filename[])
+ *  \brief  funzione che ricevendo come parametro il puntatore "rubrica" e il nome del file, restituisce il numero di righe di cui il file è composto
+ *  \param  FILE *rubrica: puntatore di tipo FILE
+ *  \param  char filename[]: nome del file da cercare
+ */
 
 int ContaRighe(FILE *rubrica, char filename[])
 {
@@ -53,7 +73,7 @@ void MostraRubrica(FILE *rubrica, char filename[], int righe)
     fclose(rubrica);
 }
 
-void AggiungiContatto(FILE *rubrica, char filename[], int righe, PERSONA_T nuovoContatto)
+void AggiungiContatto(FILE *rubrica, char filename[], int righe, PERSONA_T nuovoContatto, char filenameOut[], int argc)
 {
     if ((rubrica = fopen(filename, "r")) == NULL)
     {
@@ -79,10 +99,21 @@ void AggiungiContatto(FILE *rubrica, char filename[], int righe, PERSONA_T nuovo
     //printf("tutta la rubrica:\n%s\n", str);
     persone[righe - 1] = nuovoContatto;
     //printf("nuovo contatto: %s %s %s\n", persone[righe - 1].nome, persone[righe - 1].cognome, persone[righe - 1].numeroTelefonico);
-    if ((rubrica = fopen(filename, "w")) == NULL)
+    if (argc != 4)
     {
-        printf("Impossibile aprire il file\n");
-        exit(2);
+        if ((rubrica = fopen(filename, "w")) == NULL)
+        {
+            printf("Impossibile aprire il file\n");
+            exit(2);
+        }
+    }
+    else
+    {
+        if ((rubrica = fopen(filenameOut, "w")) == NULL)
+        {
+            printf("Impossibile aprire il file\n");
+            exit(2);
+        }
     }
     char tmp[SINGLE_LINE];
     sprintf(tmp, "%s %s %s", persone[righe - 1].nome, persone[righe - 1].cognome, persone[righe - 1].numeroTelefonico);
@@ -92,7 +123,7 @@ void AggiungiContatto(FILE *rubrica, char filename[], int righe, PERSONA_T nuovo
     printf("\n");
 }
 
-void RimuoviContatto(FILE *rubrica, char filename[], int righe, PERSONA_T cancContatto)
+void RimuoviContatto(FILE *rubrica, char filename[], int righe, PERSONA_T cancContatto, char filenameOut[], int argc)
 {
     if ((rubrica = fopen(filename, "r")) == NULL)
     {
@@ -129,10 +160,21 @@ void RimuoviContatto(FILE *rubrica, char filename[], int righe, PERSONA_T cancCo
             else
                 strcat(str, tmp);
         }
-        if ((rubrica = fopen(filename, "w")) == NULL)
+        if (argc != 4)
         {
-            printf("Impossibile aprire il file\n");
-            exit(2);
+            if ((rubrica = fopen(filename, "w")) == NULL)
+            {
+                printf("Impossibile aprire il file\n");
+                exit(2);
+            }
+        }
+        else
+        {
+            if ((rubrica = fopen(filenameOut, "w")) == NULL)
+            {
+                printf("Impossibile aprire il file\n");
+                exit(2);
+            }
         }
         fprintf(rubrica, "%s", str);
         fclose(rubrica);
@@ -142,7 +184,7 @@ void RimuoviContatto(FILE *rubrica, char filename[], int righe, PERSONA_T cancCo
 
 int main(int argc, char *argv[])
 {
-    if (argc != 2 && argc != 4)
+    if ((argc != 2 && argc != 4) || (argc == 4 && strcmp(argv[2], "-f") != 0))
     {
         printf("Argomenti errati\n");
     }
@@ -173,7 +215,7 @@ int main(int argc, char *argv[])
                 printf("Inserisci il numero telefonico del contatto che vuoi aggiungere\n");
                 scanf("%s", nuovoContatto.numeroTelefonico);
                 righe = ContaRighe(rubrica, argv[1]);
-                AggiungiContatto(rubrica, argv[1], righe + 1, nuovoContatto);
+                AggiungiContatto(rubrica, argv[1], righe + 1, nuovoContatto, argv[3], argc);
                 break;
             case 3:
                 printf("Inserisci il nome del contatto che vuoi rimuovere\n");
@@ -183,7 +225,7 @@ int main(int argc, char *argv[])
                 printf("Inserisci il numero telefonico del contatto che vuoi rimuovere\n");
                 scanf("%s", cancContatto.numeroTelefonico);
                 righe = ContaRighe(rubrica, argv[1]);
-                RimuoviContatto(rubrica, argv[1], righe - 1, cancContatto);
+                RimuoviContatto(rubrica, argv[1], righe - 1, cancContatto, argv[3], argc);
                 break;
             case 4:
                 system("clear");
