@@ -31,7 +31,7 @@ int ContaRighe(FILE *rubrica_input, char filename[])
     return righe;
 }
 
-void MostraRubrica(char filename[], FILE *rubrica_input, int righe)
+void MostraRubrica(FILE *rubrica_input, char filename[], int righe)
 {
     if ((rubrica_input = fopen(filename, "r")) == NULL)
     {
@@ -55,8 +55,41 @@ int main(int argc, char *argv[])
     else
     {
         FILE *rubrica_input;
-        int righe = ContaRighe(rubrica_input, argv[1]);
-        MostraRubrica(argv[1], rubrica_input, righe);
+        int righe, risposta;
+        system("clear"); //solo per LINUX
+        do
+        {
+            printf("Digita il numero corrispondente a quello che vuoi fare:\n1) Mostra rubrica\n2) Salva contatto\n3) Elimina contatto\n4) Esci dal programma\n5) Pulisci la console\n\n");
+            scanf("%d", &risposta);
+            switch (risposta)
+            {
+            case 1:
+                righe = ContaRighe(rubrica_input, argv[1]);
+                MostraRubrica(rubrica_input, argv[1], righe);
+                printf("\n\n");
+                break;
+            case 2:
+                /*PERSONA_T nuovoContatto;
+                printf("Inserisci il nome del contatto che vuoi aggiungere\n");
+                scanf("%s", nuovoContatto.nome);
+                printf("Inserisci il cognome del contatto che vuoi aggiungere\n");
+                scanf("%s", nuovoContatto.cognome);
+                printf("Inserisci il numero telefonico del contatto che vuoi aggiungere\n");
+                scanf("%s", nuovoContatto.numeroTelefonico);
+                righe = ContaRighe(rubrica_input, argv[1]);*/
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                system("clear");
+                break;
+            default:
+                printf("comando non valido\n");
+                break;
+            }
+        } while (risposta != 4);
     }
     return 0;
 }
