@@ -29,7 +29,8 @@ typedef struct
  *  \fn     int ContaRighe(FILE *rubrica, char filename[])
  *  \brief  funzione che ricevendo come parametro il puntatore "rubrica" e il nome del file, restituisce il numero di righe di cui il file è composto
  *  \param  FILE *rubrica: puntatore di tipo FILE
- *  \param  char filename[]: nome del file da cercare
+ *  \param  char filename[]: nome del file da leggere
+ *  \return righe: ritorna il numero di righe presente nel file
  */
 
 int ContaRighe(FILE *rubrica, char filename[])
@@ -57,6 +58,14 @@ int ContaRighe(FILE *rubrica, char filename[])
     return righe;
 }
 
+/**
+ *  \fn     void MostraRubrica(FILE *rubrica, char filename[], int righe)
+ *  \brief  mostra a schermo la lista dei contatti presente nel file passato per parametro al'esecuzione del programma
+ *  \param  FILE *rubrica: puntatore di tipo FILE
+ *  \param  char filename[]: nome del file da leggere
+ *  \param  int righe: numero di righe presenti nel file
+ */
+
 void MostraRubrica(FILE *rubrica, char filename[], int righe)
 {
     if ((rubrica = fopen(filename, "r")) == NULL)
@@ -72,6 +81,17 @@ void MostraRubrica(FILE *rubrica, char filename[], int righe)
     }
     fclose(rubrica);
 }
+
+/**
+ *  \fn     void AggiungiContatto(FILE *rubrica, char filename[], int righe, PERSONA_T nuovoContatto, char filenameOut[], int argc)
+ *  \brief  aggiunge alla lista un nuovo contatto, che l'utente vuole aggiungere
+ *  \param  FILE *rubrica: puntatore di tipo FILE
+ *  \param  char filename[]: nome del file da leggere
+ *  \param  int righe: numero di righe presenti nel file
+ *  \param  PERSONA_T nuovoContatto: dati del contatto che l'utente vuole aggiungere
+ *  \param  char filenameOut[]: nome dell'eventuale file di output dove aggiornare la lista
+ *  \param  int argc: numero di argomenti che il programma, all'avvio ha ricevuto coem parametro
+ */
 
 void AggiungiContatto(FILE *rubrica, char filename[], int righe, PERSONA_T nuovoContatto, char filenameOut[], int argc)
 {
@@ -122,6 +142,17 @@ void AggiungiContatto(FILE *rubrica, char filename[], int righe, PERSONA_T nuovo
     fclose(rubrica);
     printf("\n");
 }
+
+/**
+ *  \fn     void RimuoviContatto(FILE *rubrica, char filename[], int righe, PERSONA_T cancContatto, char filenameOut[], int argc)
+ *  \brief  rimuove dalla lista dei un contatto, che l'utente vuole eliminare
+ *  \param  FILE *rubrica: puntatore di tipo FILE
+ *  \param  char filename[]: nome del file da leggere
+ *  \param  int righe: numero di righe presenti nel file
+ *  \param  PERSONA_T cancContatto: dati del contatto che l'utente vuole rimuovere
+ *  \param  char filenameOut[]: nome dell'eventuale file di output dove aggiornare la lista
+ *  \param  int argc: numero di argomenti che il programma, all'avvio ha ricevuto coem parametro
+ */
 
 void RimuoviContatto(FILE *rubrica, char filename[], int righe, PERSONA_T cancContatto, char filenameOut[], int argc)
 {
@@ -182,6 +213,12 @@ void RimuoviContatto(FILE *rubrica, char filename[], int righe, PERSONA_T cancCo
     printf("\n");
 }
 
+/**
+ *  \fn     int main()
+ *  \brief  funzione principale, che si occupa della gestione della rubrica
+ *  \return int: indica come è terminato il programma
+ */
+
 int main(int argc, char *argv[])
 {
     if ((argc != 2 && argc != 4) || (argc == 4 && strcmp(argv[2], "-f") != 0))
@@ -241,5 +278,3 @@ int main(int argc, char *argv[])
     }
     return 0;
 }
-
-//https://stackoverflow.com/questions/12733105/c-function-that-counts-lines-in-file
