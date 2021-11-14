@@ -11,39 +11,70 @@ typedef struct
     char numeroTelefonico[10];
 } PERSONA_T;
 
-int ContaRighe(FILE *rubrica_input, char filename[])
+int ContaRighe(FILE *rubrica, char filename[])
 {
-    if ((rubrica_input = fopen(filename, "r")) == NULL)
+    if ((rubrica = fopen(filename, "r")) == NULL)
     {
         printf("Impossibile aprire il file\n");
         exit(1);
     }
     int righe = 0;
-    while (!feof(rubrica_input))
+    char c;
+    while (!feof(rubrica))
     {
-        char c = fgetc(rubrica_input);
+        c = fgetc(rubrica);
         if (c == '\n')
             righe++;
     }
-    righe++;
-    fclose(rubrica_input);
+    if (c == '\n' && righe != 0)
+        righe++;
+    fclose(rubrica);
     printf("Il file possiede %d righe\n", righe);
     return righe;
 }
 
-void MostraRubrica(FILE *rubrica_input, char filename[], int righe)
+void MostraRubrica(FILE *rubrica, char filename[], int righe)
 {
-    if ((rubrica_input = fopen(filename, "r")) == NULL)
+    if ((rubrica = fopen(filename, "r")) == NULL)
     {
         printf("Impossibile aprire il file\n");
         exit(1);
     }
     PERSONA_T persone[righe];
-    for (int i = 0; !feof(rubrica_input); i++)
-        fscanf(rubrica_input, "%s %s %s", persone[i].nome, persone[i].cognome, persone[i].numeroTelefonico);
-    fclose(rubrica_input);
+    for (int i = 0; !feof(rubrica); i++)
+        fscanf(rubrica, "%s %s %s", persone[i].nome, persone[i].cognome, persone[i].numeroTelefonico);
+    fclose(rubrica);
     for (int i = 0; i < righe; i++)
         printf("%s %s %s\n", persone[i].nome, persone[i].cognome, persone[i].numeroTelefonico);
+}
+
+void AggiungiContatto(FILE *rubrica, char filename[], int righe, PERSONA_T nuovoContatto)
+{
+    if ((rubrica = fopen(filename, "r")) == NULL)
+    {
+        printf("Impossibile aprire il file\n");
+        exit(1);
+    }
+    PERSONA_T persone[righe];
+    for (int i = 0; !feof(rubrica); i++)
+        fscanf(rubrica, "%s %s %s", persone[i].nome, persone[i].cognome, persone[i].numeroTelefonico);
+    fclose(rubrica);
+    persone[righe - 1] = nuovoContatto;
+    int strLength = 32 * righe;
+    char str[strLength];
+    for (int i = 0; i < righe; i++)
+    {
+        char tmp[32];
+        sprintf(tmp, "%s %s %s\n", persone[i].nome, persone[i].cognome, persone[i].numeroTelefonico);
+        strcat(str, tmp);
+    }
+    if ((rubrica = fopen(filename, "w")) == NULL)
+    {
+        printf("Impossibile aprire il file\n");
+        exit(2);
+    }
+    fprintf(rubrica, "%s", str);
+    fclose(rubrica);
 }
 
 int main(int argc, char *argv[])
@@ -54,7 +85,8 @@ int main(int argc, char *argv[])
     }
     else
     {
-        FILE *rubrica_input;
+        FILE *rubrica;
+        PERSONA_T nuovoContatto;
         int righe, risposta;
         system("clear"); //solo per LINUX
         do
@@ -64,19 +96,20 @@ int main(int argc, char *argv[])
             switch (risposta)
             {
             case 1:
-                righe = ContaRighe(rubrica_input, argv[1]);
-                MostraRubrica(rubrica_input, argv[1], righe);
+                righe = ContaRighe(rubrica, argv[1]);
+                MostraRubrica(rubrica, argv[1], righe);
                 printf("\n\n");
                 break;
             case 2:
-                /*PERSONA_T nuovoContatto;
                 printf("Inserisci il nome del contatto che vuoi aggiungere\n");
                 scanf("%s", nuovoContatto.nome);
                 printf("Inserisci il cognome del contatto che vuoi aggiungere\n");
                 scanf("%s", nuovoContatto.cognome);
                 printf("Inserisci il numero telefonico del contatto che vuoi aggiungere\n");
                 scanf("%s", nuovoContatto.numeroTelefonico);
-                righe = ContaRighe(rubrica_input, argv[1]);*/
+                righe = ContaRighe(rubrica, argv[1]);
+                righe++;
+                AggiungiContatto(rubrica, argv[1], righe, nuovoContatto);
                 break;
             case 3:
                 break;
