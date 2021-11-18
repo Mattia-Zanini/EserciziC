@@ -1,0 +1,30 @@
+\hypertarget{es2_8c}{}\doxysection{es2.\+c File Reference}
+\label{es2_8c}\index{es2.c@{es2.c}}
+
+
+file che genera due figli i quali, a loro volta, ne generano altri due e dopo aver fatto ciò i figli del padre aspettano in ordine i loro figli generati il padre, invece, attende la terminazione dei figli nell\textquotesingle{}ordine inverso con cui li crea  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$sys/wait.\+h$>$}\newline
+Include dependency graph for es2.\+c\+:
+% FIG 0
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{es2_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{es2_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}} 
+int \mbox{\hyperlink{es2_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
+\begin{DoxyCompactList}\small\item\em Funzione che assegna un pid iniziale, genera due figli i quali, a loro volta, ne generano altri due e dopo aver fatto ciò i figli del padre aspettano in ordine i loro figli generati il padre, invece, attende la terminazione dei figli nell\textquotesingle{}ordine inverso con cui li crea. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+file che genera due figli i quali, a loro volta, ne generano altri due e dopo aver fatto ciò i figli del padre aspettano in ordine i loro figli generati il padre, invece, attende la terminazione dei figli nell\textquotesingle{}ordine inverso con cui li crea 
+
+\begin{DoxyAuthor}{Author}
+Mattia Zanini 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+18/11/2021 
+\end{DoxyDate}
