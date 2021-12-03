@@ -53,7 +53,7 @@ void LetturaFile(FILE *input, char filename[], int righe, GIOCATORE_T calciatori
 void MostraAttacanti(GIOCATORE_T output[], int length)
 {
     for (int i = 0; i < length; i++)
-        printf("%s %s\n", output[i].nome, output[i].nome);
+        printf("%s %s\n", output[i].nome, output[i].cognome);
 }
 
 int main(int argc, char *argv[])
