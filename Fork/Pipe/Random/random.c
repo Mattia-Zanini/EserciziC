@@ -26,7 +26,7 @@ int main()
         int numeri[ARRAY_SIZE]; // = {19, 34, 67, 98, 2, 23, 91, 7, 10, 85};
         for (int i = 0; i < ARRAY_SIZE; i++)
         {
-            numeri[i] = rand() % 200; //per limitare il range dei numeri casuali da 0 a 199
+            numeri[i] = rand() % 12; //per limitare il range dei numeri casuali da 0 a 199
             printf("Questo è il numero generato: %d\n", numeri[i]);
         }
         close(canale1[READ]);  //scive solo sul canale1
