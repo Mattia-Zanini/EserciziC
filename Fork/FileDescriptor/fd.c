@@ -10,10 +10,10 @@ int main()
     if (p1 == 0)
     {
         int myPID = getpid();
-        char str[30];
-        sprintf(str, "ls -l /proc/%d/fd | wc -l", myPID);
-        sprintf(str, "ls -l /proc/%d/fd", myPID);
         printf("Sono il figlio e questo è il mio PID: %d\n", myPID);
+        char str[30];
+        /*sprintf(str, "ls -l /proc/%d/fd | wc -l", myPID);*/
+        sprintf(str, "ls -l /proc/%d/fd", myPID);
         system(str);
         exit(0);
     }
