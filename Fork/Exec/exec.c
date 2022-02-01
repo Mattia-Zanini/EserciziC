@@ -6,7 +6,6 @@
 int main()
 {
     int status;
-    char fileName[] = "file.txt";
     int fd[2];
     pipe(fd);
     int p1 = fork();
@@ -15,7 +14,8 @@ int main()
         close(1);
         dup(fd[1]);
         close(fd[1]);
-        execl("/bin/bash", "cat", "file.txt", NULL);
+        close(fd[0]);
+        execl("/bin/cat", "cat", "file.txt", NULL);
         exit(0);
     }
     else if (p1 > 0)
@@ -26,13 +26,16 @@ int main()
             close(0);
             dup(fd[0]);
             close(fd[0]);
+            close(fd[1]);
             char cmd[] = "wc -l";
-            execl("/bin/bash", cmd, NULL);
+            execl("/bin/wc", cmd, NULL);
             exit(0);
         }
         else if (p2 > 0)
         {
             wait(&status);
+            close(fd[0]);
+            close(fd[1]);
             printf("Il figli hanno terminato\n");
         }
     }
