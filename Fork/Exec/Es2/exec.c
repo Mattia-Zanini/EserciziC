@@ -4,6 +4,10 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 
+#define READ 0
+#define WRITE 1
+#define ARRAY_SIZE 30
+
 int main()
 {
     int err = open("error.txt", O_WRONLY);
@@ -43,7 +47,7 @@ int main()
             close(fd2[1]);
             close(fd2[0]);
 
-            // sleep(30);
+            //sleep(6);
             execl("/bin/wc", "wc", NULL);
             exit(0);
         }
@@ -59,15 +63,17 @@ int main()
 
             printf("PID di p0: %d\n", getpid());
 
+            /*char str[ARRAY_SIZE];
+            sprintf(str, "ls -l /proc/%d/fd", getpid());
+            system(str);
+            printf("Questo è il valore: %d\n", out);*/
+
             close(1); // stdout
             dup(out);
             close(out);
 
-            /*char str[30];
-            sprintf(str, "ls -l /proc/%d/fd", getpid());
-            system(str);*/
-
             wait(&status);
+            //read(READ, str, sizeof(char) * ARRAY_SIZE);
             close(fd[0]);
             close(fd[1]);
 
