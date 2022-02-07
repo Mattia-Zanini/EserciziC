@@ -10,9 +10,8 @@
 
 int main()
 {
-    int err = open("error.txt", O_WRONLY);
+    //int err = open("error.txt", O_WRONLY | O_CREAT);
 
-    int status;
     int fd[2];
     pipe(fd);
     int p1 = fork();
@@ -53,7 +52,10 @@ int main()
         }
         else if (p2 > 0)
         {
-            int out = open("output.txt", O_WRONLY);
+            close(fd[0]);
+            close(fd[1]);
+
+            int out = open("output.txt", O_WRONLY | O_CREAT);
 
             // pipe 2
             close(0); // stdin
@@ -72,11 +74,13 @@ int main()
             dup(out);
             close(out);
 
-            wait(&status);
-            //read(READ, str, sizeof(char) * ARRAY_SIZE);
-            close(fd[0]);
-            close(fd[1]);
-
+            //scrive sul stdout
+            char x = getc(stdin);
+            while (x != EOF)
+            {
+                printf("%c", x);
+                x = getc(stdin);
+            }
             // printf("Il figli hanno terminato\n");
         }
     }
