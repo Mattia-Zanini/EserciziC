@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 {
     if (argc == 2)
     {
-        int status, tot = 0;
+        int tot = 0;
         int piped[2];
         int pStat = pipe(piped);
         if (pStat == 0)
@@ -33,15 +33,22 @@ int main(int argc, char *argv[])
                         close(piped[READ]);
 
                         execl("/bin/grep", "grep", "-c", str, argv[1], NULL);
-                        exit(0);
+                        exit(1);
                     }
                     else if (p1 > 0) // padre
                     {
-                        wait(&status);
-                        char ris;
-                        read(piped[READ], &ris, 4);
-                        printf("'%s' è stata individuata %d volte\n\n", str, atoi(&ris));
-                        tot += atoi(&ris);
+                        wait(&p1);
+                        if (p1 != -1)
+                        {
+                            char ris;
+                            read(piped[READ], &ris, 4);
+                            printf("'%s' è stata individuata %d volte\n\n", str, atoi(&ris));
+                            tot += atoi(&ris);
+                        }
+                        else
+                        {
+                            printf("Errore durante la chiamata exec\n");
+                        }
                     }
                     else // errore generazione figlio
                     {
