@@ -1,112 +1,73 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <string.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
-// cat file.txt | grep -o *parola* | wc -l
+// grep -ow *parola* | wc -l
 
 #define READ 0
 #define WRITE 1
-#define WORD_LENGTH 10
 
-int main(int argc, char *argv[])
-{
-    if (argc == 2)
-    {
-        int status;
-        int tot = 0;
-        char str[WORD_LENGTH];
-        while (1)
-        {
-            printf("Inserisci la parola che vuoi cercare:\n");
-                scanf("%s", str);
-                if (strcmp(str, "fine") != 0)
-                {
-                    int p1 = fork();
-                    int piped[2];
-                    pipe(piped);
-                    if(p1 == 0) //figlio 1
-                    {
-                        close(1); // stdout
-                        dup(piped[WRITE]);
-                        close(piped[READ]);
-                        close(piped[WRITE]);
-                        exit(0);
-                    }
-                    else if( p1 > 0) //padre
-                    {
-                        int p2 = fork();
-                        int piped2[2];
-                        pipe(piped2);
-                        if(p2 == 0) // figlio 2
-                        {
-                            sleep(3);
-                            close(0); // stdin
-                            dup(piped[READ]);
-                            close(piped[READ]);
-                            close(piped[WRITE]);
+int main(int argc, char *argv[]) {
+  char stringa[100], cnt[100];
+  int cnttot = 0, piped[2], p2p0[2], p1, p2;
 
-                            close(1); // stdout
-                            dup(piped2[WRITE]);
-                            close(piped2[WRITE]);
-                            close(piped2[READ]);
-                            exit(0);
-                        }
-                        else if(p2 > 0) //padre
-                        {
-                            close(piped[WRITE]);
-                            close(piped[READ]);
+  if (argc != 2) {
+    printf("Argomenti errarti.\n");
+    exit(1);
+  }
 
-                            int p3 = fork();
-                            int piped3[2];
-                            pipe(piped3);
-                            if(p3 == 0) // figlio 3
-                            {
-                                sleep(6);
+  while (1) {
+    pipe(piped);
 
-                                close(0); // stdin
-                                dup(piped2[READ]);
-                                close(piped2[READ]);
-                                close(piped2[WRITE]);
+    printf("Che parola vuoi cercare? ");
+    scanf("%s", stringa);
 
-                                close(1); // stdout
-                                dup(piped3[WRITE]);
-                                close(piped3[WRITE]);
-                                close(piped3[READ]);
-                                exit(0);
-                            }
-                            else if(p3 > 0) //padre
-                            {
-                                close(piped2[READ]);
-                                close(piped2[WRITE]);
-
-                                close(0); // stdin
-                                dup(piped3[READ]);
-                                close(piped3[READ]);
-                                close(piped3[WRITE]);
-
-                                printf("Padre\n");
-                                sprintf(str, "ls -l /proc/%d/fd", getpid());
-                                system(str);
-
-                                waitpid(p1, &status, 0);
-                                waitpid(p2, &status, 0);
-                                waitpid(p3, &status, 0);
-                            }
-                        }
-                    }
-                }
-                else // termina il ciclo
-                {
-                    break;
-                }
-            }
-        printf("La ricerca ha prodotto %d risultati totali\n", tot);
+    if (strcmp(stringa, "fine") == 0) {
+      printf("Numero di parole trovate: %d\n", cnttot);
+      close(piped[1]);
+      close(piped[0]);
+      exit(1);
     }
-    else
-    {
-        printf("Argomenti Errati\n");
+
+    p1 = fork();
+
+    if (p1 == 0) {
+      close(1);
+      dup(piped[1]);
+      close(piped[1]);
+      close(piped[0]);
+      execl("/usr/bin/grep", "grep", "-ow", stringa, argv[1], (char *)0);
+      return -1;
     }
-    return 0;
+
+    pipe(p2p0);
+    p2 = fork();
+
+    if (p2 == 0) {
+      close(0);
+      dup(piped[0]);
+      close(piped[0]);
+      close(piped[1]);
+
+      close(1);
+      dup(p2p0[1]);
+      close(p2p0[1]);
+      close(p2p0[0]);
+      execl("/usr/bin/wc", "wc", "-l", (char *)0);
+      return -1;
+    }
+
+    close(piped[0]);
+    close(piped[1]);
+    close(p2p0[1]);
+
+    read(p2p0[0], cnt, sizeof(cnt));
+    close(p2p0[0]);
+    printf("Il file ha %d '%s' \n", atoi(cnt), stringa);
+    cnttot = cnttot + atoi(cnt);
+  }
+
+  return 0;
 }
