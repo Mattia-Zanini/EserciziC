@@ -56,6 +56,10 @@ int main() {
         close(p3p0[W]);
         close(p3p0[R]);
 
+        // chiudo la pipe che non serve
+        close(p1p2[W]);
+        close(p1p2[R]);
+
         execl("/bin/tail", "tail", "-n", "+2", NULL);
         return -1;
       } else // padre
@@ -67,35 +71,16 @@ int main() {
         close(p3p0[W]);
 
         wait(&p3);
-
-        int nope = 0;
         int nread = 0;
 
         while ((nread = read(p3p0[0], buffer, 1)) > 0) {
-          /*if ((buffer[0] != '\n' || buffer[0] != '(' || buffer[0] != ')') &&
-          nope == 0)
-          {
-              strncat(valore, &buffer[0], sizeof(buffer[0]));
-              printf("ok");
-          }*/
           if (buffer[0] == '\n') {
-            printf("Ho letto la riga: %s", valore);
             tot = tot + strtod(valore, &ptr);
             valore[0] = '\0';
           }
           strncat(valore, &buffer[0], sizeof(buffer[0]));
-          printf("Ho letto questo: %c", buffer[0]);
-          /*
-          else if (buffer[0] == '(')
-          {
-              nope = 1;
-          }
-          else if (buffer[0] == ')')
-          {
-              nope = 0;
-          }*/
         }
-        printf("%.2lf\n", tot);
+        printf("Totale: %.2lf ms\n", tot);
       }
     }
   }
