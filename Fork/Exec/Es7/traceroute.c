@@ -24,7 +24,7 @@ int main()
         close(p1p2[W]);
         close(p1p2[R]);
 
-        execl("/sbin/traceroute", "traceroute", "google.com",
+        execl("/usr/sbin/traceroute", "traceroute", "google.com",
               NULL);
         return -1;
     }
@@ -77,29 +77,34 @@ int main()
                 wait(&p3);
 
                 int nope = 0;
+                int nread = 0;
 
-                while (read(p3p0[0], buffer, 1) > 0)
+                while ((nread = read(p3p0[0], buffer, 1)) > 0)
                 {
-                    if (buffer[0] != '\n' || buffer[0] != '(' || buffer[0] != ')' && nope == 0)
+                    /*if ((buffer[0] != '\n' || buffer[0] != '(' || buffer[0] != ')') && nope == 0)
                     {
                         strncat(valore, &buffer[0], sizeof(buffer[0]));
                         printf("ok");
-                    }
-                    else if (buffer[0] == '\n')
+                    }*/
+                    if (buffer[0] == '\n')
                     {
+                        printf("Ho letto la riga: %s", valore);
                         tot = tot + strtod(valore, &ptr);
                         valore[0] = '\0';
                     }
-                    else if (buffer[0] == '(' || buffer[0] == ')')
+                    strncat(valore, &buffer[0], sizeof(buffer[0]));
+                    printf("Ho letto questo: %c", buffer[0]);
+                    /*
+                    else if (buffer[0] == '(')
                     {
                         nope = 1;
                     }
                     else if (buffer[0] == ')')
                     {
                         nope = 0;
-                    }
+                    }*/
                 }
-                printf("%lf", tot);
+                printf("%.2lf\n", tot);
             }
         }
     }

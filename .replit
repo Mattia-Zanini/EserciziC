@@ -1,0 +1,3 @@
+run=""
+language="bash"
+onBoot="echo Booting up!"
