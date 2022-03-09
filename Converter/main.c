@@ -3,12 +3,15 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include "test/functions.h"
 
 #define WRITE 1
 #define READ 0
 
-void ChangeTextColor(int id) {
-  switch (id) {
+void ChangeTextColor(int id)
+{
+  switch (id)
+  {
   case -1:
     printf("\033[0m"); // DEFAULT COLOR
     break;
@@ -39,17 +42,21 @@ void ChangeTextColor(int id) {
   }
 }
 // check the file extension, which must be .dg
-int GoodExtension(char filename[]) {
+int GoodExtension(char filename[])
+{
   int length = strlen(filename);
-  if (filename[length - 2] == 'd' && filename[length - 1] == 'g') {
+  if (filename[length - 2] == 'd' && filename[length - 1] == 'g')
+  {
     return 0; // good extension
   }
   return -1; // bad extension
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   // I check that there is an argument
-  if (argc != 2) {
+  if (argc != 2)
+  {
     ChangeTextColor(1);
     printf("Error: ");
     ChangeTextColor(-1);
@@ -57,7 +64,8 @@ int main(int argc, char *argv[]) {
     return 1;
   }
   // I check that exist the file passed by argument
-  if (access(argv[1], F_OK) != 0) {
+  if (access(argv[1], F_OK) != 0)
+  {
     ChangeTextColor(1);
     printf("Error: ");
     ChangeTextColor(-1);
@@ -65,7 +73,8 @@ int main(int argc, char *argv[]) {
     return 2;
   }
   // check the file extension
-  if (GoodExtension(argv[1]) != 0) {
+  if (GoodExtension(argv[1]) != 0)
+  {
     ChangeTextColor(1);
     printf("Error: ");
     ChangeTextColor(-1);
@@ -76,7 +85,8 @@ int main(int argc, char *argv[]) {
   int son, p[2];
   pipe(p);
   son = fork();
-  if (son == 0) {
+  if (son == 0)
+  {
     dup2(p[WRITE], WRITE);
     char cmd[40];
     sprintf(cmd, "wc -m %s", argv[1]);
@@ -86,10 +96,14 @@ int main(int argc, char *argv[]) {
   wait(&son);
   char nchar[100], c;
   // read the pipe to get the number of chars that there is in the file
-  while (read(p[READ], &c, 1) > 0) {
-    if (c != ' ') {
+  while (read(p[READ], &c, 1) > 0)
+  {
+    if (c != ' ')
+    {
       strncat(nchar, &c, 1);
-    } else {
+    }
+    else
+    {
       break;
     }
   }
@@ -97,5 +111,6 @@ int main(int argc, char *argv[]) {
   strcpy(tmp, nchar);
   printf("Quant chars: %d\n", atoi(nchar));
   printf("chars (string): %s\n", nchar);
+  printf("%d + %d = %d\n", 10, 8, Sum(10, 8));
   return 0;
 }
