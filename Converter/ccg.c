@@ -85,14 +85,17 @@ int main(int argc, char *argv[]) {
   }
   wait(&son);
   char nchar[100], c;
-  while (
-      read(p[READ], &c, 1) >
-      0) { // read the pipe to get the number of chars that there is in the file
+  // read the pipe to get the number of chars that there is in the file
+  while (read(p[READ], &c, 1) > 0) {
     if (c != ' ') {
       strncat(nchar, &c, 1);
     } else {
       break;
     }
   }
+  char tmp[strlen(nchar)];
+  strcpy(tmp, nchar);
+  printf("Quant chars: %d\n", atoi(nchar));
+  printf("chars (string): %s\n", nchar);
   return 0;
 }
