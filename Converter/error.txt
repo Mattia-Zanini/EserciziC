@@ -1,0 +1,5 @@
+This is a guide where there is all the error code that the code return:
+
+1 - No input file specified
+2 - Input file does not exist
+3 - Input file does not have the right extension
