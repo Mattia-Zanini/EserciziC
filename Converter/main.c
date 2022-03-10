@@ -94,8 +94,9 @@ int main(int argc, char *argv[])
     exit(0);
   }
   wait(&son);
-  char nchar[100], c;
   // read the pipe to get the number of chars that there is in the file
+  char *nchar, c;
+  nchar = malloc(1*sizeof(char));
   while (read(p[READ], &c, 1) > 0)
   {
     if (c != ' ')
@@ -111,6 +112,8 @@ int main(int argc, char *argv[])
   strcpy(tmp, nchar);
   printf("Quant chars: %d\n", atoi(nchar));
   printf("chars (string): %s\n", nchar);
+
+  // function.h test
   printf("%d + %d = %d\n", 10, 8, Sum(10, 8));
   return 0;
 }

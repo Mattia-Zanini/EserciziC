@@ -2,7 +2,6 @@
 
 TARGET = main
 TARGET_2 = functions
-files = ("*.c")
 
 all: # compile the code
 	@gcc -c test/$(TARGET_2).c
