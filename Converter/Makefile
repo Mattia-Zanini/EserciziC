@@ -1,11 +1,10 @@
 #make file - this is a comment section
 
 TARGET = main
-TARGET_2 = functions
 
 all: # compile the code
-	@gcc -c test/$(TARGET_2).c
-	@gcc $(TARGET).c $(TARGET_2).o -o $(TARGET)
+	@gcc -c test/functions.c debug/log.c
+	@gcc $(TARGET).c functions.o log.o -o $(TARGET)
 
 clean: # clean trash file
-	@find . -type f ! -name 'Makefile' ! -name '*.c' ! -name '*.txt' ! -name '*.dg' ! -name '*.h' -delete
+	@find . -type f ! -name 'Makefile' ! -name '*.c' ! -name '*.txt' ! -name '*.dg' ! -name '*.h' ! -name '*.log' -delete

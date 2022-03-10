@@ -4,6 +4,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include "test/functions.h"
+#include "debug/log.h"
 
 #define WRITE 1
 #define READ 0
@@ -115,5 +116,8 @@ int main(int argc, char *argv[])
 
   // function.h test
   printf("%d + %d = %d\n", 10, 8, Sum(10, 8));
+
+  // test log.h
+  DoLog("ciao");
   return 0;
 }
