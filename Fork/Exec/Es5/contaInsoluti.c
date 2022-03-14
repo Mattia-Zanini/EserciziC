@@ -37,7 +37,9 @@ int main(int argc, char *argv[]) {
 
       execl("/bin/grep", "grep", "-c", codice, argv[1], NULL);
     }
-
+    if (p1 < 0) { // problemi con il bocia
+      printf("Errore durante la generazione del primo figlio");
+    }
     if (p1 > 0) { // padre
       wait(&p1);
       read(p1p0[READ], ris, sizeof(ris));
@@ -45,34 +47,26 @@ int main(int argc, char *argv[]) {
 
       if (atoi(ris) == 0) {
         printf("Codice non trovato\n");
-      } else {
-
-        p2 = fork();
-        if (p2 == 0) { // figlio 2
-          close(1);
-          dup(p2p0[WRITE]);
-          close(p2p0[READ]);
-          close(p2p0[WRITE]);
-
-          execl("/bin/grep", "grep", "-c", strcat(codice, " insoluto"), argv[1],
-                NULL);
-        }
-
-        if (p2 > 0) { // padre
-          wait(&p2);
-          read(p2p0[READ], stringa, sizeof(stringa));
-          printf("Sono stati trovati %d insoluti\n", atoi(stringa));
-          tot += atoi(stringa);
-        }
-
-        if (p2 < 0) { // problemi con il bocia
-          printf("Errore durante la generazione del secondo figlio");
-        }
       }
-    }
+      p2 = fork();
+      if (p2 == 0) { // figlio 2
+        close(1);
+        dup(p2p0[WRITE]);
+        close(p2p0[READ]);
+        close(p2p0[WRITE]);
 
-    if (p1 < 0) { // problemi con il bocia
-      printf("Errore durante la generazione del primo figlio");
+        execl("/bin/grep", "grep", "-c", strcat(codice, " insoluto"), argv[1],
+              NULL);
+      }
+      if (p2 < 0) { // problemi con il bocia
+        printf("Errore durante la generazione del secondo figlio");
+      }
+      if (p2 > 0) { // padre
+        wait(&p2);
+        read(p2p0[READ], stringa, sizeof(stringa));
+        printf("Sono stati trovati %d insoluti\n", atoi(stringa));
+        tot += atoi(stringa);
+      }
     }
   }
   return 0;

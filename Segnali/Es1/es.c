@@ -1,13 +1,22 @@
-#include <fcntl.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
-static volatile int keepRunning = 1;
+#define READ 0
+#define WRITE 1
 
-void intHandler(int dummy) { keepRunning = 0; }
+int tot = 0;
+
+void signal_handler(int signum) {
+
+  // Return type of the handler function should be void
+  printf("\nChiusura del programma...\n");
+  printf("sono stati trovati: %d insoluti\n", tot);
+  exit(0);
+}
 
 /*int main(void) {
 
@@ -26,59 +35,49 @@ void intHandler(int dummy) { keepRunning = 0; }
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {
-    printf("Numero argomenti sbagliato");
-    exit(1);
+    printf(
+        "Argomenti errati. Inserire come primo argomento il nome di un file\n");
+    exit(0);
   }
+  char stringa[1000], codice[5];
+  int p1p0[2], pid;
 
-  int p1p2[2], p2p0[2], pid;
-  double totale = 0;
-  char buffer[1], *ptr, strimporto[100];
+  pipe(p1p0);
+  while (1) {
+    // signal handler
+    signal(SIGINT, signal_handler);
 
-  pipe(p1p2);
+    printf("Inserisci codice:\n");
+    scanf("%s", codice);
 
-  pid = fork();
+    if (strcmp("esci", codice) == 0) {
+      printf("\nChiusura del programma...\n");
+      printf("sono stati trovati: %d insoluti\n", tot);
+      close(p1p0[READ]);
+      close(p1p0[WRITE]);
+      exit(0);
+    }
 
-  if (pid == 0) {
-    close(p1p2[0]);
-    close(1);
-    dup(p1p2[1]);
-    close(p1p2[1]);
-    execl("/bin/cat", "cat", argv[1], (char *)0);
-    return -1;
-  }
+    pid = fork();
+    if (pid == 0) {
+      close(p1p0[READ]);
+      close(WRITE);
+      dup(p1p0[WRITE]);
+      close(p1p0[WRITE]);
 
-  pipe(p2p0);
-  pid = fork();
-  if (pid == 0) {
-    close(p1p2[1]);
-    close(0);
-    dup(p1p2[0]);
-    close(p1p2[0]);
+      execl("/bin/grep", "grep", "-c", strcat(codice, " insoluto"), argv[1],
+            NULL);
+      return -1;
+    }
 
-    close(p2p0[0]);
-    close(1);
-    dup(p2p0[1]);
-    close(p2p0[1]);
+    read(p1p0[READ], stringa, sizeof(stringa));
+    printf("Sono stati trovati %d insoluti\n", atoi(stringa));
+    tot = tot + atoi(stringa);
 
-    execl("/usr/bin/awk", "awk", "{print $3}", (char *)0);
-    return -1;
-  }
-
-  close(p1p2[1]);
-  close(p1p2[0]);
-  close(p2p0[1]);
-
-  while (read(p2p0[0], buffer, 1) > 0) {
-
-    strncat(strimporto, &buffer[0], sizeof(buffer[0]));
-    if (buffer[0] == '\n') {
-      printf("ricevuto importo dalla pipe p2p0: %s", strimporto);
-      totale = totale + strtod(strimporto, &ptr);
-      strimporto[0] = '\0';
+    if (pid < 0) {
+      printf("Errore durante la generazione del figlio");
     }
   }
 
-  close(p2p0[0]);
-  printf("\nIl totale delle fatture è: %.2lf\n", totale);
   return 0;
 }
