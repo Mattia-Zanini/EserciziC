@@ -8,4 +8,5 @@ int DoLog(char log[])
   f = fopen("file_log.log", "a+"); // a+ (create + append) option will allow appending which is useful in a log file
   if (f == NULL) { /* Something is wrong   */}
   fprintf(f, "%s\n", log);
+  return 0;
 }
