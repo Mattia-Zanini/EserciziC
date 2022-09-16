@@ -17,7 +17,7 @@ void replaceChars(char string[MAX_SIZE][MAX_SIZE], int lenght, char *str, char c
             {
                 string[i][j] = chrReplace;
                 ++(*replaced);
-                //printf("rimpiazzata una lettera\n");
+                // printf("rimpiazzata una lettera\n");
             }
         }
         int strLength = strlen(string[i]);
