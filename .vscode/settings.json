@@ -6,7 +6,8 @@
     "functions.h": "c",
     "log.h": "c",
     "errorwrite.h": "c",
-    "err.h": "c"
+    "err.h": "c",
+    "stdlib.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "/usr/bin/gcc",
   "C_Cpp_Runner.cppCompilerPath": "/usr/bin/g++",
