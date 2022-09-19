@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 //#define N_STRINGS 1000000
-#define N_STRINGS 10
+#define N_STRINGS 50
 #define MIN_CHARS 3
 #define MAX_CHARS 20
 
@@ -40,15 +40,14 @@ int checkStrings(char *strs[18][N_STRINGS], char *str, int size)
 {
     for (int i = 0; i < size; i++)
     {
-        /*
-        printf("Lunghezza stringa\n: %ld", strlen(str));
-        printf("Vediamo : %s\n", str);
-
-        printf("Parola Array in posizione %d: %s\n", i, strs[i]);
+        printf("Lunghezza stringa: %ld\n", strlen(str));
+        // sleep(1);
+        printf("Parola Array in posizione %d: %s\n", i, strs[strlen(str) - 3][i]);
         printf("Parola Generata: %s\n", str);
-        */
-        if (strcmp(strs[strlen(str) - 3][i], str) == 0)
-            return 1;
+
+        if (strs[strlen(str) - 3][i] != NULL)
+            if (strcmp(strs[strlen(str) - 3][i], str) == 0)
+                return 1;
     }
     return 0;
 }
@@ -93,15 +92,16 @@ int main()
     int percentage = 0;
     int sizes[18] = {0};
 
-    char *strings[18][N_STRINGS];
-    /*
-    char **strings = malloc(18 * N_STRINGS * sizeof *strings);
+    // char *strings[18][N_STRINGS];
+    char *(*strings)[N_STRINGS];
+
+    strings = malloc(18 * sizeof *strings);
+
     if (strings == NULL)
     {
         fprintf(stderr, "Memory allocation error!\n");
         exit(EXIT_FAILURE);
     }
-    */
 
     printf("Starting to generate random strings\n\n");
     for (int i = 0; i < N_STRINGS; i++)
@@ -132,15 +132,13 @@ int main()
         // printf("Parola assegnata: %s\n", strings[i]);
     }
 
-    printf("Ecco quante parole sono state scritte");
+    printf("Ecco quante parole sono state scritte\n");
     for (int i = 0; i < 18; i++)
-        printf("\n%d\n", sizes[i]);
+        printf("%d\n", sizes[i]);
 
-    /*
-    wirteOutput("output2.json", strings, sizes, 1);
+    // wirteOutput("output2.json", strings, sizes, 1);
     wirteOutput("output2.txt", strings, sizes, 0);
-    */
     printf("End\n");
-    // free(strings);
+    free(strings);
     return 0;
 }
