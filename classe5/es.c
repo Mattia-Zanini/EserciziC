@@ -86,7 +86,7 @@ int main()
         }
         sleep(1);
         printf("Press Any Key to Continue\n");
-        getchar();
+        getc(stdin);
         printf("\e[1;1H\e[2J"); // pulisce tutto il terminale
     }
 }
