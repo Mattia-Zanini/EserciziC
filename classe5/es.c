@@ -4,7 +4,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#define SIZE_ARRAY 100
+#define SIZE_ARRAY 50
 #define MIN 0
 #define MAX 100
 #define randnum(min, max) ((rand() % (int)(((max) + 1) - (min))) + (min)) // genera numeri random in un certo range di valori
@@ -30,11 +30,19 @@ void GenArray(int *arr)
     }
 }
 
-void ReverseArray(int *arr)
+void PrintArray(int *arr, int reverse)
 {
-    for (int i = SIZE_ARRAY - 1; i >= 0; i--)
+    if(reverse == 0){
+      for (int i = 0; i < SIZE_ARRAY; i++)
     {
         printf("[%d]: %d\n", i, arr[i]);
+    }
+    }
+    else if(reverse == 1){
+      for (int i = SIZE_ARRAY - 1; i >= 0; i--)
+    {
+        printf("[%d]: %d\n", i, arr[i]);
+    }
     }
 }
 
@@ -67,9 +75,10 @@ int main()
         switch (n)
         {
         case 1:
+            PrintArray(array, 0);
             break;
         case 2:
-            ReverseArray(array);
+            PrintArray(array, 1);
             break;
         case 3:
             break;
@@ -84,9 +93,10 @@ int main()
         case 8:
             break;
         }
-        sleep(1);
+        /*sleep(1);
         printf("Press Any Key to Continue\n");
         getc(stdin);
+        */
         printf("\e[1;1H\e[2J"); // pulisce tutto il terminale
     }
 }
