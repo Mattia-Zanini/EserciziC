@@ -95,7 +95,7 @@ int main()
     // char *strings[18][N_STRINGS];
     char *(*strings)[N_STRINGS];
 
-    strings = malloc(18 * sizeof *strings);
+    strings = calloc(18, sizeof *strings);
 
     if (strings == NULL)
     {
