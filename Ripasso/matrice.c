@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void cioa() {}
+
 int main()
 {
-    int a[5][5];
-
-    a[0][3] = 10;
-
-    int b[5][5][30][60][10];
+    int zioPERAAAAAAAAAAAA[5][5];
+    cioa();
 }
