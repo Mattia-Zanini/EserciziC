@@ -26,14 +26,16 @@ vettore: 1,2,3,4 vettore alternato: 2,1,4,3 (attenzione se lungo dispari);
 8) Ordinamento del vettore (ordinamento a scelta).
 */
 
+int size = SIZE_ARRAY;
+
 void PrintArray(int *arr, int reverse)
 {
     if (reverse == FALSE)
-        for (int i = 0; i < SIZE_ARRAY; i++)
+        for (int i = 0; i < size; i++)
             printf("[%d]: %d\n", i, arr[i]);
 
     else if (reverse == TRUE)
-        for (int i = SIZE_ARRAY - 1; i >= 0; i--)
+        for (int i = size - 1; i >= 0; i--)
             printf("[%d]: %d\n", i, arr[i]);
 }
 
@@ -41,7 +43,7 @@ void PrintNumbers(int *arr, int even)
 {
     int n = 2;
 
-    for (int i = 0; i < SIZE_ARRAY; i++)
+    for (int i = 0; i < size; i++)
     {
         if (even == FALSE && arr[i] % n != 0)
             printf("[%d]: %d\n", i, arr[i]);
@@ -66,9 +68,9 @@ int FindNumber(int *arr, int n, int size)
 
 void Sort(int *arr)
 {
-    for (int i = 0; i < SIZE_ARRAY; i++)
+    for (int i = 0; i < size; i++)
     {
-        for (int j = i + 1; j < SIZE_ARRAY; j++)
+        for (int j = i + 1; j < size; j++)
         {
             if (arr[i] > arr[j])
             {
@@ -82,7 +84,7 @@ void Sort(int *arr)
 
 void SwitchValue(int *arr)
 {
-    for (int i = 0; i < SIZE_ARRAY; i += 2)
+    for (int i = 0; i < size; i += 2)
     {
         /*
         printf("Questo è i: %d\n", i);
@@ -90,7 +92,7 @@ void SwitchValue(int *arr)
         printf("Questo è arr[i + 1]: %d\n", arr[i + 1]);
         */
 
-        if (i + 1 >= SIZE_ARRAY)
+        if (i + 1 >= size)
             break;
         int temp = arr[i];
         arr[i] = arr[i + 1];
@@ -100,7 +102,7 @@ void SwitchValue(int *arr)
 
 void GenArray(int *arr)
 {
-    for (int i = 0; i < SIZE_ARRAY; i++)
+    for (int i = 0; i < size; i++)
     {
         arr[i] = randnum(MIN, MAX);
         if (FindNumber(arr, arr[i], i) != -1)
@@ -108,27 +110,26 @@ void GenArray(int *arr)
     }
 }
 
-void DeleteNumber(int *arr, int pos, int nR)
+void DeleteNumber(int *arr, int pos)
 {
-    // use for loop to delete the element and update the index
-    for (int i = pos; i < SIZE_ARRAY - 1; i++)
+    if (size == 0)
+        printf("Non puoi accorciare l'array più di così");
+    else
     {
-        arr[i] = arr[i + 1]; // assign arr[i+1] to arr[i]
+        // use for loop to delete the element and update the index
+        for (int i = pos; i < size - 1; i++)
+        {
+            arr[i] = arr[i + 1]; // assign arr[i+1] to arr[i]
+        }
+        size--;
     }
-
-    int *tmp;
-    tmp = realloc(arr, SIZE_ARRAY - 1 * sizeof(int));
-    free(arr);
-    arr = tmp;
-    sleep(10);
 }
 
 int main()
 {
     int r;
-    // int array[SIZE_ARRAY];
-    int *array = malloc(SIZE_ARRAY * sizeof(int));
-    int nRemoved = 0;
+    int array[size];
+    // int *array = malloc(size * sizeof(int));
     srand(time(NULL));
     GenArray(array);
 
@@ -169,7 +170,7 @@ int main()
         case 5:
             printf("Inserisci un numero: ");
             scanf("%d", &num);
-            if (FindNumber(array, num, SIZE_ARRAY) != -1)
+            if (FindNumber(array, num, size) != -1)
                 printf("Il numero c'è\n");
             else
                 printf("Il numero non c'è\n");
@@ -177,11 +178,11 @@ int main()
         case 6:
             printf("Inserisci un numero: ");
             scanf("%d", &num);
-            int pos = FindNumber(array, num, SIZE_ARRAY);
+            int pos = FindNumber(array, num, size);
             if (pos != -1)
             {
                 printf("Il numero c'è\n");
-                DeleteNumber(array, pos, nRemoved);
+                DeleteNumber(array, pos);
             }
             else
                 printf("Il numero non c'è\n");
@@ -193,61 +194,6 @@ int main()
             Sort(array);
             break;
         }
-        sleep(1);
         printf("\n\n\n");
     }
-    free(array);
-}
-
-// A utility function to get maximum value in arr[]
-int getMax(int arr[], int n)
-{
-    int mx = arr[0];
-    for (int i = 1; i < n; i++)
-        if (arr[i] > mx)
-            mx = arr[i];
-    return mx;
-}
-
-// A function to do counting sort of arr[] according to
-// the digit represented by exp.
-void countSort(int arr[], int n, int exp)
-{
-    int output[n]; // output array
-    int i, count[10] = {0};
-
-    // Store count of occurrences in count[]
-    for (i = 0; i < n; i++)
-        count[(arr[i] / exp) % 10]++;
-
-    // Change count[i] so that count[i] now contains actual
-    //  position of this digit in output[]
-    for (i = 1; i < 10; i++)
-        count[i] += count[i - 1];
-
-    // Build the output array
-    for (i = n - 1; i >= 0; i--)
-    {
-        output[count[(arr[i] / exp) % 10] - 1] = arr[i];
-        count[(arr[i] / exp) % 10]--;
-    }
-
-    // Copy the output array to arr[], so that arr[] now
-    // contains sorted numbers according to current digit
-    for (i = 0; i < n; i++)
-        arr[i] = output[i];
-}
-
-// The main function to that sorts arr[] of size n using
-// Radix Sort
-void radixsort(int arr[], int n)
-{
-    // Find the maximum number to know number of digits
-    int m = getMax(arr, n);
-
-    // Do counting sort for every digit. Note that instead
-    // of passing digit number, exp is passed. exp is 10^i
-    // where i is current digit number
-    for (int exp = 1; m / exp > 0; exp *= 10)
-        countSort(arr, n, exp);
 }
