@@ -11,6 +11,11 @@
 int GiaPresente(char w[], char c)
 {
     for (int i = 0; i < strlen(w); i++)
+    {
+        if (w[i] == c)
+            return TRUE;
+    }
+    return FALSE;
 }
 
 int ParolaPiuLunga(char w[], char w2[])
@@ -41,7 +46,9 @@ void LettereSuEntrambeParole(char w[], char w2[])
         for (int j = 0; j < length; j++)
             if (w[i] == w2[j])
                 break;
-        ambedue[i] = w[i];
+        if (isalpha(w[i]))
+            if (GiaPresente(ambedue, w[i]))
+                ambedue[i] = w[i];
     }
     printf("Lettere che entrambe le paorle contengono: %s\n", ambedue);
 }
@@ -87,11 +94,14 @@ void LetterePariDispari(char w[])
     printf("Parola generata con lettere in posizione dispari: %s\n", dispari);
 }
 
-int NumeroLettera(char w[], char lettera)
+int NumeroLettera(char w[])
 {
     int nChar = 0;
+    printf("Scegli una lettera e ti dirò quante volte compare nella parola\n");
+    char lett[1];
+    scanf("%s", lett);
     for (int i = 0; i < strlen(w); i++)
-        if (w[i] == lettera)
+        if (w[i] == lett[0])
             nChar++;
 
     return nChar;
@@ -169,16 +179,13 @@ int main()
 {
     char word[WORD_LENGTH];
     char word2[WORD_LENGTH];
-    char lett;
     printf("Inserisci una parola a piacere\n");
     scanf("%s", word);
+    printf("Lunghezza parolaaaa: %ld\n", strlen(word));
     printf("Contiene numeri? (0 -> no, 1 -> si)\n%d\n", SoloLettere(word));
     printf("Contiene %d vocali\n", NumeroVocali(word));
     printf("Contiene %d consonanti\n", NumeroConsonanti(word));
-    printf("Scegli una lettera e ti dirò quante volte compare nella parola\n");
-    sleep(1);
-    scanf("%c", &lett);
-    printf("Contiene %d lettere\n", NumeroLettera(word, lett));
+    printf("Contiene %d lettere\n", NumeroLettera(word));
     LetterePariDispari(word);
 
     printf("Inserisci una parola a piacere\n");
