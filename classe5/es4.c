@@ -72,11 +72,11 @@ void LetterePariDispari(char w[])
 {
     int length = strlen(w);
     int nP = 0, nD = 0;
-    char pari[length];
-    char dispari[length];
+    char pari[length + 1];
+    char dispari[length + 1];
     for (int i = 0; i < length; i++)
     {
-        if (isalpha(w[i]))
+        if (w[i] != '\n' && w[i] != '\0')
         {
             if (i % 2 == 0)
             {
@@ -90,6 +90,14 @@ void LetterePariDispari(char w[])
             }
         }
     }
+    // serve per non far si che vengano riconosciuti dei caratteri erroneamente
+    // così la stringa diventa, esempio: 'C','i','a','o','\0','\0','\0','\0'
+    // '\0' è il carattere nullo dei char
+    for (int i = length; i >= nP; i--)
+        pari[i] = '\0';
+    for (int i = length; i >= nD; i--)
+        dispari[i] = '\0';
+
     printf("Parola generata con lettere in posizione pari: %s\n", pari);
     printf("Parola generata con lettere in posizione dispari: %s\n", dispari);
 }
@@ -181,11 +189,10 @@ int main()
     char word2[WORD_LENGTH];
     printf("Inserisci una parola a piacere\n");
     scanf("%s", word);
-    printf("Lunghezza parolaaaa: %ld\n", strlen(word));
     printf("Contiene numeri? (0 -> no, 1 -> si)\n%d\n", SoloLettere(word));
     printf("Contiene %d vocali\n", NumeroVocali(word));
     printf("Contiene %d consonanti\n", NumeroConsonanti(word));
-    printf("Contiene %d lettere\n", NumeroLettera(word));
+    printf("Contiene %d caratteri, del char che hai scelto\n", NumeroLettera(word));
     LetterePariDispari(word);
 
     printf("Inserisci una parola a piacere\n");
