@@ -10,6 +10,8 @@
 
 int GiaPresente(char w[], char c)
 {
+    printf("String: %s\n", w);
+    printf("Char: %c\n", c);
     for (int i = 0; i < strlen(w); i++)
     {
         if (w[i] == c)
@@ -39,16 +41,26 @@ int ParolaPiuLunga(char w[], char w2[])
 
 void LettereSuEntrambeParole(char w[], char w2[])
 {
-    int length = ParolaPiuLunga(w, w2);
-    char ambedue[WORD_LENGTH];
-    for (int i = 0; i < length; i++)
+    printf("Queste sono le due parole:\n[0]%s\n[1]%s\n", w, w2);
+    char ambedue[WORD_LENGTH + 1];
+    for (int i = 0; i < WORD_LENGTH + 1; i++)
+        ambedue[i] = '\0';
+    int lCount = 0;
+
+    for (int i = 0; i < strlen(w); i++)
     {
-        for (int j = 0; j < length; j++)
+        for (int j = 0; j < strlen(w2); j++)
+        {
             if (w[i] == w2[j])
-                break;
-        if (isalpha(w[i]))
-            if (GiaPresente(ambedue, w[i]))
-                ambedue[i] = w[i];
+            {
+                if (w2[j] != '\0' && w2[j] != '\n')
+                    if (!GiaPresente(ambedue, w2[j]))
+                    {
+                        ambedue[lCount] = w2[j];
+                        lCount++;
+                    }
+            }
+        }
     }
     printf("Lettere che entrambe le paorle contengono: %s\n", ambedue);
 }
