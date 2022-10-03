@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <unistd.h>
 
 #define WORD_LENGTH 30
 #define TRUE 1
@@ -10,8 +9,10 @@
 
 int GiaPresente(char w[], char c)
 {
+    /*
     printf("String: %s\n", w);
     printf("Char: %c\n", c);
+    */
     for (int i = 0; i < strlen(w); i++)
     {
         if (w[i] == c)
