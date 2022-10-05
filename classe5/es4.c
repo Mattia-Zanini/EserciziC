@@ -137,7 +137,7 @@ int NumeroConsonanti(char w[])
     {
         for (int j = 0; j < strlen(vocali); j++)
         {
-            if (w[i] == vocali[j])
+            if (tolower(w[i]) == vocali[j])
             {
                 isConsonante = FALSE;
                 break;
@@ -157,7 +157,7 @@ int NumeroVocali(char w[])
     char vocali[] = "aeiou";
     for (int i = 0; i < strlen(w); i++)
         for (int j = 0; j < strlen(vocali); j++)
-            if (w[i] == vocali[j])
+            if (tolower(w[i]) == vocali[j])
                 nVocali++;
 
     return nVocali;
