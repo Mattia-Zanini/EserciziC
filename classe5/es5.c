@@ -1,9 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-#define TRUE 1
-#define FALSE 0
 
 /*
 Realizzare "array auto-incrementante" di interi, che sia sempre pieno. Dovrà avere le seguenti funzionalità:
@@ -115,6 +111,13 @@ int main()
             InsertNumber(arr, &size, num);
             break;
         case 2:
+            printf("Inserisci un numero: ");
+            scanf("%d", &num);
+            int p = FindNumber(arr, num, &size);
+            if (p == -1)
+                printf("Non trovato\n");
+            else
+                printf("Il numero è stato trovato in posizione: [%d]\n", p);
             break;
         case 3:
             printf("Inserisci un numero: ");
