@@ -107,7 +107,7 @@ void Sort1(int *arr)
             nDispari++;
         }
     }
-    // PrintArray(temp, 20);
+    Sort(temp, nEven, 0);
     CopyArray(temp, arr, 20, 0, 0);
 }
 
