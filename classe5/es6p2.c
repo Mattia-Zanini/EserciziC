@@ -21,35 +21,33 @@
 
 #define randnum(min, max) ((rand() % (int)(((max) + 1) - (min))) + (min)) // genera numeri random in un certo range di valori
 
-void Sort(int *arr, int size, int reverse)
+void Sort(int *arr, int size, int start)
 {
-    if (reverse == FALSE)
+    for (int i = start; i < size; i++)
     {
-        for (int i = 0; i < size; i++)
+        for (int j = i + 1; j < size; j++)
         {
-            for (int j = i + 1; j < size; j++)
+            if (arr[i] > arr[j])
             {
-                if (arr[i] > arr[j])
-                {
-                    int temp = arr[i];
-                    arr[i] = arr[j];
-                    arr[j] = temp;
-                }
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
             }
         }
     }
-    else
+}
+
+void ReverseSort(int *arr, int size)
+{
+    for (int i = 0; i < size; ++i)
     {
-        for (int i = 0; i < size; ++i)
+        for (int j = i + 1; j < size; ++j)
         {
-            for (int j = i + 1; j < size; ++j)
+            if (arr[i] < arr[j])
             {
-                if (arr[i] < arr[j])
-                {
-                    int temp = arr[i];
-                    arr[i] = arr[j];
-                    arr[j] = temp;
-                }
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
             }
         }
     }
@@ -91,27 +89,89 @@ void CopyArray(int *s, int *d, int size, int start, int startS)
     }
 }
 
-int Sort1(int *arr, int *e, int *o)
+int Sort1(int *arr)
 {
-    int ev = 0, od = 0;
-    for (int i = 0; i < 40; i++)
+    int temp[20], nEven = 0, nDispari = 0;
+    for (int i = 0; i < 20; i++)
     {
-        if (arr[i] % 2 == 0 && ev < 20)
+        if (arr[i] % 2 == 0)
         {
-            e[ev] = arr[i];
-            ev++;
+            temp[nEven] = arr[i];
+            // printf("Salvataggio di %d in posizione [%d]\n", arr[i], nEven);
+            nEven++;
+        }
+        else
+        {
+            temp[20 - 1 - nDispari] = arr[i];
+            // printf("Salvataggio di %d in posizione [%d]\n", arr[i], (20 - 1 - nDispari));
+            nDispari++;
         }
     }
+    Sort(temp, nEven, 0);
+    CopyArray(temp, arr, 20, 0, 0);
+    return nDispari;
+}
+
+int Sort2(int *arr)
+{
+    int temp[20], nEven = 0, nDispari = 0;
+    for (int i = 20; i < 40; i++)
+    {
+        if (arr[i] % 2 != FALSE)
+        {
+            temp[nDispari] = arr[i];
+            // printf("Salvataggio di %d in posizione [%d]\n", arr[i], nDispari);
+            nDispari++;
+        }
+        else
+        {
+            temp[20 - 1 - nEven] = arr[i];
+            // printf("Salvataggio di %d in posizione [%d]\n", arr[i], (20 - 1 - nEven));
+            nEven++;
+        }
+    }
+    ReverseSort(temp, nDispari);
+    CopyArray(temp, arr, 40, 20, 20);
+    return nEven;
 }
 
 int main()
 {
-    int array[SIZE_ARRAY];
-    int even[20];
-    int odd[20];
+    int *array = malloc(sizeof(int) * SIZE_ARRAY);
     srand(time(NULL));
     GenArray(array);
-    Sort(array, SIZE_ARRAY, FALSE);
-    PrintArray(array, SIZE_ARRAY);
+    int dispari = Sort1(array);
+    int pari = Sort2(array);
+    Sort(array, SIZE_ARRAY, 40);
+    // PrintArray(array, SIZE_ARRAY);
+    int evenMax = 20 - dispari;
+    int oddMax = 20 - pari;
+    int newSize = (SIZE_ARRAY - pari - dispari);
+    printf("New size: %d\n", newSize);
+    int *tmp = malloc(sizeof(int) * newSize);
+    int tempN = 0;
+    for (int i = 0; i < SIZE_ARRAY; i++)
+    {
+        /*
+        printf("Valore posizione[%d]\n", i);
+        printf("Valore evenMax: %d\n", evenMax);
+        printf("Valore oddMax: %d\n", oddMax);
+        */
+        if (i == evenMax && i < 20)
+            evenMax++;
+        else if (i == oddMax + 20 && i < 40)
+            oddMax++;
+        else
+        {
+            tmp[tempN] = array[i];
+            tempN++;
+        }
+    }
+    array = realloc(array, sizeof(int) * newSize);
+    CopyArray(tmp, array, newSize, 0, 0);
+    PrintArray(tmp, newSize);
+    PrintArray(array, newSize);
+    free(array);
+    free(tmp);
     return 0;
 }
