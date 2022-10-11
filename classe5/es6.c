@@ -100,34 +100,55 @@ void CopyArray2(int *s, int *d, int size, int start)
     }
 }
 
+int Pari(int n)
+{
+    if (n % 2 == 0)
+        return TRUE;
+    return FALSE;
+}
+
 void EvenAndOdd(int *arr, int *e, int *o)
 {
-    int ev = 0, od = 0, last = 0;
+    int ev = 0, od = 0, last = 99, r = 0;
+    int rim[60];
     for (int i = 0; i < SIZE_ARRAY; i++)
     {
-        last = 100 - 1 - i;
-        if (arr[i] % 2 == 0 && ev < 20)
+        if (Pari(arr[i]) == TRUE && ev < 20)
         {
             e[ev] = arr[i];
+            // printf("Numero pari [%d]: %d\n", i, arr[i]);
             ev++;
         }
-        else if (arr[last] % 2 != 0 && od < 20)
+        else if (r < 60)
+        {
+            rim[r] = arr[i];
+            r++;
+        }
+
+        if (Pari(arr[last]) == FALSE && od < 20)
         {
             o[od] = arr[last];
+            // printf("Numero dispari [%d]: %d\n", last, arr[last]);
             od++;
+            last--;
+        }
+        else if (r < 60)
+        {
+            rim[r] = arr[last];
+            r++;
+            last--;
         }
     }
-    last = 100 - ev - od;
-    int rim[last];
-    CopyArray2(arr, rim, last + ev, ev);
-    // PrintArray(rim, last);
-    CopyArray(o, arr, od, ev);
-    printf("Numeri pari trovati: %d\n", ev);
-    printf("Numeri dispari trovati: %d\n", od);
-    CopyArray(e, arr, ev, 0);
+    Sort(rim, 60, FALSE);
     Sort(o, od, TRUE);
+    /*
+    PrintArray(rim, 60);
+    printf("\n\n\n\n");
+    */
+
+    CopyArray(e, arr, ev, 0);
     CopyArray(o, arr, od, ev);
-    CopyArray(rim, arr, last, ev + od);
+    CopyArray(rim, arr, 60, ev + od);
 }
 
 void Integrity(int *arr, int *arr2)
