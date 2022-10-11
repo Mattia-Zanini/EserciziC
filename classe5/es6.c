@@ -91,25 +91,43 @@ void CopyArray(int *s, int *d, int size, int startS)
     }
 }
 
+void CopyArray2(int *s, int *d, int size, int start)
+{
+    for (int i = start; i < size; i++)
+    {
+        // printf("Salvataggio di %d in posizione [%d]\n", s[i], i);
+        d[i - start] = s[i];
+    }
+}
+
 void EvenAndOdd(int *arr, int *e, int *o)
 {
-    int ev = 0, od = 0;
-    for (int i = 0; i < 40; i++)
+    int ev = 0, od = 0, last = 0;
+    for (int i = 0; i < SIZE_ARRAY; i++)
     {
+        last = 100 - 1 - i;
         if (arr[i] % 2 == 0 && ev < 20)
         {
             e[ev] = arr[i];
             ev++;
         }
-        else if (arr[i] % 2 != 0 && od < 20)
+        else if (arr[last] % 2 != 0 && od < 20)
         {
-            o[od] = arr[i];
+            o[od] = arr[last];
             od++;
         }
     }
+    last = 100 - ev - od;
+    int rim[last];
+    CopyArray2(arr, rim, last + ev, ev);
+    // PrintArray(rim, last);
+    CopyArray(o, arr, od, ev);
+    printf("Numeri pari trovati: %d\n", ev);
+    printf("Numeri dispari trovati: %d\n", od);
     CopyArray(e, arr, ev, 0);
     Sort(o, od, TRUE);
-    CopyArray(o, arr, od, 20);
+    CopyArray(o, arr, od, ev);
+    CopyArray(rim, arr, last, ev + od);
 }
 
 void Integrity(int *arr, int *arr2)
