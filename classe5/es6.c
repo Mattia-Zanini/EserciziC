@@ -61,7 +61,7 @@ void PrintArray(int *arr, int size)
         printf("[%d]: %d\n", i, arr[i]);
 }
 
-int FindNumber(int *arr, int n)
+int FindNumber(int *arr, int size, int n)
 {
     for (int i = 0; i < SIZE_ARRAY; i++)
         if (arr[i] == n)
@@ -75,7 +75,7 @@ void GenArray(int *arr)
     for (int i = 0; i < SIZE_ARRAY; i++)
     {
         int n = randnum(MIN, MAX);
-        if (FindNumber(arr, n) != -1)
+        if (FindNumber(arr, i, n) != -1)
             i--;
         else
             arr[i] = n;
@@ -91,7 +91,7 @@ void CopyArray(int *s, int *d, int size, int startS)
     }
 }
 
-int EvenAndOdd(int *arr, int *e, int *o)
+void EvenAndOdd(int *arr, int *e, int *o)
 {
     int ev = 0, od = 0;
     for (int i = 0; i < 40; i++)
@@ -112,15 +112,35 @@ int EvenAndOdd(int *arr, int *e, int *o)
     CopyArray(o, arr, od, 20);
 }
 
+void Integrity(int *arr, int *arr2)
+{
+    int integrity = 0;
+    for (int i = 0; i < SIZE_ARRAY; i++)
+    {
+        for (int j = 0; j < SIZE_ARRAY; j++)
+        {
+            if (arr[i] == arr2[j])
+                integrity++;
+        }
+    }
+    printf("Integrity: %d%%\n", integrity);
+}
+
 int main()
 {
     int array[SIZE_ARRAY];
+    // int array2[SIZE_ARRAY];
     int even[20];
     int odd[20];
     srand(time(NULL));
     GenArray(array);
+
+    // CopyArray(array, array2, SIZE_ARRAY, 0);
+
     Sort(array, SIZE_ARRAY, FALSE);
     EvenAndOdd(array, even, odd);
     PrintArray(array, SIZE_ARRAY);
+    // PrintArray(array2, SIZE_ARRAY);
+    // Integrity(array, array2);
     return 0;
 }
