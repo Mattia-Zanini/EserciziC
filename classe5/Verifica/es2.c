@@ -20,6 +20,22 @@ int IsSpecial(char c)
     return 0;
 }
 
+void Sort(char *arr, int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = i + 1; j < size; j++)
+        {
+            if (arr[i] > arr[j])
+            {
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+    }
+}
+
 char *LettereMaiuscole(char *w)
 {
     int n = 0;
@@ -126,6 +142,11 @@ int main()
     char *charMinuscole = LettereMinuscole(word);
     char *charNum = LettereNumeriche(word);
     char *charSpec = LettereSpeciali(word);
+
+    Sort(charMaiscuole, strlen(charMaiscuole));
+    Sort(charMinuscole, strlen(charMinuscole));
+    Sort(charNum, strlen(charNum));
+    Sort(charSpec, strlen(charSpec));
 
     int totalLength = strlen(word);
     char sortWord[totalLength + 1];
