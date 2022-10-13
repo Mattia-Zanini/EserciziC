@@ -10,7 +10,8 @@
     "stdlib.h": "c",
     "limits": "c",
     "string.h": "c",
-    "stdio.h": "c"
+    "stdio.h": "c",
+    "__locale": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "/usr/bin/gcc",
   "C_Cpp_Runner.cppCompilerPath": "/usr/bin/g++",
