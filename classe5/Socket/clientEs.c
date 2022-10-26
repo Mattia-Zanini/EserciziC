@@ -23,7 +23,8 @@ int main(int argc, char **argv)
 
     servizio.sin_family = AF_INET;
     // servizio.sin_addr.s_addr = htonl(INADDR_ANY);
-    servizio.sin_addr.s_addr = inet_addr("127.0.0.1");
+    // servizio.sin_addr.s_addr = inet_addr("127.0.0.1");
+    servizio.sin_addr.s_addr = inet_addr("192.168.0.46");
     servizio.sin_port = htons(SERVERPORT);
 
     socketfd = socket(AF_INET, SOCK_STREAM, 0);

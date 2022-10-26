@@ -23,8 +23,9 @@ int main()
 
     // definizione dei dati del socket
     servizio.sin_family = AF_INET; // AF_INET --> IPv4
+    servizio.sin_addr.s_addr = INADDR_ANY;
     // servizio.sin_addr.s_addr = htonl(INADDR_ANY);
-    servizio.sin_addr.s_addr = inet_addr("127.0.0.1");
+    // servizio.sin_addr.s_addr = inet_addr("127.0.0.1");
     servizio.sin_port = htons(SERVERPORT);
 
     // impostazione del transport endpoint del server
