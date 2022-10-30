@@ -35,7 +35,7 @@ int main()
     while (TRUE)
     {
         printf("Server Padre in ascolto\n");
-        fflush(stdout);
+        // fflush(stdout);
 
         conn = accept(socketfd, (struct sockaddr *)&client_remote, (socklen_t *)&client_len);
         printf("Connessione Accettata dal padre [IP: %s]\n", inet_ntoa(client_remote.sin_addr));

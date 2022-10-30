@@ -11,7 +11,7 @@
 int main()
 {
     struct sockaddr_in server_remote;
-    int socketfd;
+    int socketfd, newPort, stat;
     char buff[DIM] = {0};
 
     server_remote.sin_family = AF_INET;
@@ -20,22 +20,26 @@ int main()
 
     socketfd = socket(AF_INET, SOCK_STREAM, 0);
 
-    connect(socketfd, (struct sockaddr *)&server_remote, sizeof(server_remote));
+    stat = connect(socketfd, (struct sockaddr *)&server_remote, sizeof(server_remote));
+    if (stat < 0)
+    {
+        printf("Il server al momento non è raggiungibile\n");
+        exit(EXIT_FAILURE);
+    }
 
     read(socketfd, buff, 1024);
     printf("Nuova porta: %d\n", atoi(buff));
     close(socketfd);
 
-    int newPort = atoi(buff);
+    newPort = atoi(buff);
     // sleep(1);
 
     socketfd = socket(AF_INET, SOCK_STREAM, 0);
     server_remote.sin_port = htons(newPort);
 
-    int stat = -1;
     while (1) // prova a connettersi in contiuazione finchè stat non è uguale a 0 (connessione riuscita)
     {
-        int stat = connect(socketfd, (struct sockaddr *)&server_remote, sizeof(server_remote));
+        stat = connect(socketfd, (struct sockaddr *)&server_remote, sizeof(server_remote));
         // printf("Stato connessione %d\n", stat);
         if (stat == -1) // connessione non andata a buon fine
         {
