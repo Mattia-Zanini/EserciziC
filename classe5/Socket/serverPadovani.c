@@ -1,14 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <netdb.h>
 #include <string.h>
-#include <fcntl.h>
-#include <signal.h>
-#include <errno.h>
-#include <ctype.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 
@@ -23,8 +17,8 @@ int main()
 
     // definizione dei dati del socket
     servizio.sin_family = AF_INET; // AF_INET --> IPv4
-    servizio.sin_addr.s_addr = INADDR_ANY;
-    // servizio.sin_addr.s_addr = htonl(INADDR_ANY);
+    // servizio.sin_addr.s_addr = INADDR_ANY;
+    servizio.sin_addr.s_addr = htonl(INADDR_ANY);
     // servizio.sin_addr.s_addr = inet_addr("127.0.0.1");
     servizio.sin_port = htons(SERVERPORT);
 
@@ -40,17 +34,20 @@ int main()
     // ciclo infinito
     while (1)
     {
-        printf("\n\nServer in ascolto...");
+        printf("\nServer in ascolto...");
 
         fflush(stdout);
 
-        soa = accept(socketfd, (struct sockaddr *)&addr_remoto, &fromlen);
+        soa = accept(socketfd, (struct sockaddr *)&addr_remoto, (socklen_t *)&fromlen);
         // legge dal client
         read(soa, str, sizeof(str));
 
-        printf("Stringa ricevuta: %s\n", str);
+        printf("Stringa ricevuta: %s\nIp Client: %s\n", str, inet_ntoa(addr_remoto.sin_addr));
 
         close(soa);
+
+        if (strcmp(str, "close") == 0)
+            break;
     }
 
     return 0;

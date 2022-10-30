@@ -43,12 +43,12 @@ int main(int argc, char const *argv[])
     }
     if (listen(server_fd, 3) < 0)
     {
-        perror("listen");
+        perror("listen failed");
         exit(EXIT_FAILURE);
     }
     if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen)) < 0)
     {
-        perror("accept");
+        perror("accept failed");
         exit(EXIT_FAILURE);
     }
     valread = read(new_socket, buffer, 1024);
