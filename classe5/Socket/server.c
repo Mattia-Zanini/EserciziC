@@ -18,24 +18,32 @@ void ClearBuffer(char buffer[])
         buffer[i] = 0;
 }
 
+int BindSocket(int addr, int port, int nClients)
+{
+    struct sockaddr_in serv;
+    serv.sin_family = AF_INET;
+    serv.sin_addr.s_addr = addr;
+    serv.sin_port = htons(port);
+
+    int sockFD = socket(AF_INET, SOCK_STREAM, 0);
+    bind(sockFD, (struct sockaddr *)&serv, sizeof(serv));
+    listen(sockFD, nClients);
+    return sockFD;
+}
+
 int main()
 {
     struct sockaddr_in server, client_remote;
     int socketfd, conn, client_len = sizeof(client_remote), childs_port = SERVERPORT;
-    char buff[BUFFER_DIM];
+    char buff[BUFFER_DIM] = {0};
 
-    server.sin_family = AF_INET;
-    server.sin_addr.s_addr = INADDR_ANY;
-    server.sin_port = htons(SERVERPORT);
-
-    socketfd = socket(AF_INET, SOCK_STREAM, 0);
-    bind(socketfd, (struct sockaddr *)&server, sizeof(server));
-    listen(socketfd, 1);
+    socketfd = BindSocket(INADDR_ANY, SERVERPORT, 1);
+    // printf("File descriptor socket: %d\n", socketfd);
 
     while (TRUE)
     {
         printf("Server Padre in ascolto\n");
-        // fflush(stdout);
+        fflush(stdout);
 
         conn = accept(socketfd, (struct sockaddr *)&client_remote, (socklen_t *)&client_len);
         printf("Connessione Accettata dal padre [IP: %s]\n", inet_ntoa(client_remote.sin_addr));
@@ -58,13 +66,7 @@ int main()
         }
         else if (child == 0) // child process
         {
-            server.sin_family = AF_INET;
-            server.sin_addr.s_addr = INADDR_ANY;
-            server.sin_port = htons(childs_port);
-
-            socketfd = socket(AF_INET, SOCK_STREAM, 0);
-            bind(socketfd, (struct sockaddr *)&server, sizeof(server));
-            listen(socketfd, 1);
+            socketfd = BindSocket(INADDR_ANY, childs_port, 1);
 
             printf("Figlio (%d) in ascolto\n", getpid());
             fflush(stdout);
@@ -75,7 +77,7 @@ int main()
 
             printf("Stringa ricevuta dal figlio (%d) [PORT: %d]: %s\n", getpid(), childs_port, buff);
             close(conn);
-            exit(0);
+            exit(EXIT_SUCCESS);
         }
     }
     return 0;
