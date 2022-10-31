@@ -1,16 +1,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <signal.h>
+#include <error.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <unistd.h>
 #include <arpa/inet.h>
 
 #define BUFFER_DIM 1024
-#define SERVERPORT 1313
+#define SERVERPORT 49152
 
 #define TRUE 1
 #define FALSE 0
+
+#define PIPE_READ 0
+#define PIPE_WRITE 1
+
+#define EXIT_SIGINT 2
+
+typedef struct
+{
+    int sockFD;
+    int bindStatus;
+    int listenStatus;
+    int s_port;
+} socket_status_t;
+
+void gestione_segnale(int numero_segnale)
+{
+    // printf("Ho catturato il segnale SIGINT (CTRL+C, numero segnale %d)!\n", numero_segnale);
+    printf("\nChiusura Server...\n");
+    exit(EXIT_SIGINT);
+}
 
 void ClearBuffer(char buffer[])
 {
@@ -18,66 +41,116 @@ void ClearBuffer(char buffer[])
         buffer[i] = 0;
 }
 
-int BindSocket(int addr, int port, int nClients)
+socket_status_t BindSocket(int addr, int *port, int nClients)
 {
-    struct sockaddr_in serv;
-    serv.sin_family = AF_INET;
-    serv.sin_addr.s_addr = addr;
-    serv.sin_port = htons(port);
+    socket_status_t sock_stat;
+    struct sockaddr_in sock;
+    int len = sizeof(sock);
 
-    int sockFD = socket(AF_INET, SOCK_STREAM, 0);
-    bind(sockFD, (struct sockaddr *)&serv, sizeof(serv));
-    listen(sockFD, nClients);
-    return sockFD;
+    sock.sin_family = AF_INET;
+    sock.sin_addr.s_addr = addr;
+    sock.sin_port = htons(*port);
+
+    if ((sock_stat.sockFD = socket(AF_INET, SOCK_STREAM, 0)) < 3)
+        perror("socket");
+    while (TRUE)
+    {
+        if ((sock_stat.bindStatus = bind(sock_stat.sockFD, (struct sockaddr *)&sock, len)) == -1)
+        {
+            perror("bind");
+            if ((sock_stat.sockFD = socket(AF_INET, SOCK_STREAM, 0)) < 3)
+                perror("socket");
+            (*port)++;
+            if (*port > 65535)
+                (*port) = 49152;
+            sock.sin_port = htons(*port);
+        }
+        else
+            break;
+    }
+    sock_stat.s_port = *port;
+
+    if ((sock_stat.listenStatus = listen(sock_stat.sockFD, nClients)) != 0)
+        perror("listen");
+
+    /*
+    printf("bind error %d\n", sock_stat.bindStatus);
+
+    if (getsockname(sock_stat.sockFD, (struct sockaddr *)&sock, &len) == -1)
+        perror("getsockname");
+    */
+
+    printf("port number %d\n", sock_stat.s_port);
+
+    return sock_stat;
 }
 
 int main()
 {
-    struct sockaddr_in server, client_remote;
-    int socketfd, conn, client_len = sizeof(client_remote), childs_port = SERVERPORT;
+    struct sockaddr_in socketStruct;
+    int socketfd, conn, child, server_port = SERVERPORT, client_len = sizeof(socketStruct);
     char buff[BUFFER_DIM] = {0};
 
-    socketfd = BindSocket(INADDR_ANY, SERVERPORT, 1);
-    // printf("File descriptor socket: %d\n", socketfd);
+    signal(SIGINT, gestione_segnale);
+
+    socketfd = BindSocket(INADDR_ANY, &server_port, 1).sockFD;
+    printf("File descriptor socket: %d\n", socketfd);
 
     while (TRUE)
     {
-        printf("Server Padre in ascolto\n");
+        printf("Server in ascolto\n");
         fflush(stdout);
 
-        conn = accept(socketfd, (struct sockaddr *)&client_remote, (socklen_t *)&client_len);
-        printf("Connessione Accettata dal padre [IP: %s]\n", inet_ntoa(client_remote.sin_addr));
+        conn = accept(socketfd, (struct sockaddr *)&socketStruct, (socklen_t *)&client_len);
+        printf("Connessione Accettata dal server [IP: %s]\n", inet_ntoa(socketStruct.sin_addr));
 
-        childs_port++;
-
-        sprintf(buff, "%d", childs_port);
-        printf("Nuova porta del server: %s\n", buff);
-        send(conn, buff, sizeof(buff), 0);
-        close(conn);
-        ClearBuffer(buff);
-
-        int child = fork();
-        if (child < 0) // fork failed.
-            continue;
-        else if (child > 0) // parent process
+        int fd[2];
+        int pipeStatus = pipe(fd);
+        if (pipeStatus == 0)
         {
-            // printf("Parent process\n");
-            // wait(&child);
-        }
-        else if (child == 0) // child process
-        {
-            socketfd = BindSocket(INADDR_ANY, childs_port, 1);
+            child = fork();
+            if (child < 0) // fork failed.
+            {
+                perror("fork");
+                close(fd[PIPE_READ]);
+                close(fd[PIPE_WRITE]);
+                continue;
+            }
+            else if (child > 0) // parent process
+            {
+                // printf("Parent process\n");
+                // wait(&child);
 
-            printf("Figlio (%d) in ascolto\n", getpid());
-            fflush(stdout);
+                close(fd[PIPE_WRITE]);
+                read(fd[PIPE_READ], &server_port, sizeof(server_port));
+                close(fd[PIPE_READ]);
 
-            conn = accept(socketfd, (struct sockaddr *)&client_remote, (socklen_t *)&client_len);
-            printf("Connessione Accettata dal figlio (%d) [PORT: %d]\n", getpid(), childs_port);
-            read(conn, buff, sizeof(buff));
+                sprintf(buff, "%d", server_port);
+                printf("Nuova porta per il client: %s\n", buff);
+                send(conn, buff, BUFFER_DIM, 0);
+                close(conn);
+                ClearBuffer(buff);
+            }
+            else if (child == 0) // child process
+            {
+                close(fd[PIPE_READ]);
 
-            printf("Stringa ricevuta dal figlio (%d) [PORT: %d]: %s\n", getpid(), childs_port, buff);
-            close(conn);
-            exit(EXIT_SUCCESS);
+                socketfd = BindSocket(INADDR_ANY, &server_port, 1).sockFD;
+
+                write(fd[PIPE_WRITE], &server_port, sizeof(server_port));
+                close(fd[PIPE_WRITE]);
+
+                printf("Figlio (%d) in ascolto\n", getpid());
+                fflush(stdout);
+
+                conn = accept(socketfd, (struct sockaddr *)&socketStruct, (socklen_t *)&client_len);
+                printf("Connessione Accettata dal figlio (%d) [PORT: %d]\n", getpid(), server_port);
+                read(conn, buff, BUFFER_DIM);
+
+                printf("Stringa ricevuta dal figlio (%d) [PORT: %d]: %s\n", getpid(), server_port, buff);
+                close(conn);
+                exit(EXIT_SUCCESS);
+            }
         }
     }
     return 0;

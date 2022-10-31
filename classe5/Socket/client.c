@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <unistd.h>
 #include <arpa/inet.h>
+#include <time.h>
 
 #define DIM 1024
-#define SERVERPORT 1313
+#define SERVERPORT 49152
 
 int main()
 {
@@ -27,7 +29,7 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-    read(socketfd, buff, 1024);
+    read(socketfd, buff, DIM);
     printf("Nuova porta: %d\n", atoi(buff));
     close(socketfd);
 
@@ -37,10 +39,19 @@ int main()
     socketfd = socket(AF_INET, SOCK_STREAM, 0);
     server_remote.sin_port = htons(newPort);
 
+    clock_t t;
+    t = clock();
+
     while (1) // prova a connettersi in contiuazione finchè stat non è uguale a 0 (connessione riuscita)
     {
         stat = connect(socketfd, (struct sockaddr *)&server_remote, sizeof(server_remote));
         // printf("Stato connessione %d\n", stat);
+        if ((((double)(clock() - t)) / CLOCKS_PER_SEC) > 3.0) // controlla che non impieghi troppo tempo per instaurare la connessione
+        {
+            printf("Tempo scaduto\n");
+            close(socketfd);
+            exit(EXIT_FAILURE);
+        }
         if (stat == -1) // connessione non andata a buon fine
         {
             close(socketfd);
@@ -49,11 +60,17 @@ int main()
         else // esce dal loop quando la connessione è riuscita
             break;
     }
+    /*
+    t = clock() - t;
+    double time_taken = ((double)t) / CLOCKS_PER_SEC; // in seconds
+    printf("Connessione riuscita dopo %f secondi\n", time_taken);
+    */
+
     printf("Stato connessione %d\n", stat);
 
     printf("Inserisci la stringa\n");
     scanf("%s", buff);
-    write(socketfd, buff, sizeof(buff));
+    write(socketfd, buff, DIM);
 
     close(socketfd);
     return 0;
