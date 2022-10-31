@@ -8,6 +8,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <time.h>
 
 #define BUFFER_DIM 1024
 #define SERVERPORT 49152
@@ -53,11 +54,15 @@ socket_status_t BindSocket(int addr, int *port, int nClients)
 
     if ((sock_stat.sockFD = socket(AF_INET, SOCK_STREAM, 0)) < 3)
         perror("socket");
+
+    clock_t t;
+    t = clock();
     while (TRUE)
     {
         if ((sock_stat.bindStatus = bind(sock_stat.sockFD, (struct sockaddr *)&sock, len)) == -1)
         {
             perror("bind");
+            close(sock_stat.sockFD);
             if ((sock_stat.sockFD = socket(AF_INET, SOCK_STREAM, 0)) < 3)
                 perror("socket");
             (*port)++;
@@ -67,6 +72,14 @@ socket_status_t BindSocket(int addr, int *port, int nClients)
         }
         else
             break;
+
+        // controlla che non impieghi troppo tempo per instaurare la connessione
+        if ((((double)(clock() - t)) / CLOCKS_PER_SEC) > 5.0)
+        {
+            printf("Tempo scaduto per cercare una porta libera\n");
+            close(sock_stat.sockFD);
+            exit(EXIT_FAILURE);
+        }
     }
     sock_stat.s_port = *port;
 
@@ -80,7 +93,7 @@ socket_status_t BindSocket(int addr, int *port, int nClients)
         perror("getsockname");
     */
 
-    printf("port number %d\n", sock_stat.s_port);
+    // printf("port number %d\n", sock_stat.s_port);
 
     return sock_stat;
 }

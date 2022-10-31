@@ -46,7 +46,7 @@ int main()
     {
         stat = connect(socketfd, (struct sockaddr *)&server_remote, sizeof(server_remote));
         // printf("Stato connessione %d\n", stat);
-        if ((((double)(clock() - t)) / CLOCKS_PER_SEC) > 3.0) // controlla che non impieghi troppo tempo per instaurare la connessione
+        if ((((double)(clock() - t)) / CLOCKS_PER_SEC) > 6.0) // controlla che non impieghi troppo tempo per instaurare la connessione
         {
             printf("Tempo scaduto\n");
             close(socketfd);
