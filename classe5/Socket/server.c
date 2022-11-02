@@ -42,7 +42,7 @@ void ClearBuffer(char buffer[])
         buffer[i] = 0;
 }
 
-socket_status_t BindSocket(int addr, int *port, int nClients)
+socket_status_t BindSocket(int addr, int *port, int nClients, int retry)
 {
     socket_status_t sock_stat;
     struct sockaddr_in sock;
@@ -55,28 +55,41 @@ socket_status_t BindSocket(int addr, int *port, int nClients)
     if ((sock_stat.sockFD = socket(AF_INET, SOCK_STREAM, 0)) < 3)
         perror("socket");
 
-    clock_t t;
-    t = clock();
-    while (TRUE)
+    if (retry == TRUE)
+    {
+        clock_t t;
+        t = clock();
+        while (TRUE)
+        {
+            if ((sock_stat.bindStatus = bind(sock_stat.sockFD, (struct sockaddr *)&sock, len)) == -1)
+            {
+                perror("bind");
+                close(sock_stat.sockFD);
+                if ((sock_stat.sockFD = socket(AF_INET, SOCK_STREAM, 0)) < 3)
+                    perror("socket");
+                (*port)++;
+                if (*port > 65535)
+                    (*port) = SERVERPORT + 1;
+                sock.sin_port = htons(*port);
+            }
+            else
+                break;
+
+            // controlla che non impieghi troppo tempo per instaurare la connessione
+            if ((((double)(clock() - t)) / CLOCKS_PER_SEC) > 5.0)
+            {
+                printf("Tempo scaduto per cercare una porta libera\n");
+                close(sock_stat.sockFD);
+                exit(EXIT_FAILURE);
+            }
+        }
+    }
+    else
     {
         if ((sock_stat.bindStatus = bind(sock_stat.sockFD, (struct sockaddr *)&sock, len)) == -1)
         {
             perror("bind");
-            close(sock_stat.sockFD);
-            if ((sock_stat.sockFD = socket(AF_INET, SOCK_STREAM, 0)) < 3)
-                perror("socket");
-            (*port)++;
-            if (*port > 65535)
-                (*port) = 49152;
-            sock.sin_port = htons(*port);
-        }
-        else
-            break;
-
-        // controlla che non impieghi troppo tempo per instaurare la connessione
-        if ((((double)(clock() - t)) / CLOCKS_PER_SEC) > 5.0)
-        {
-            printf("Tempo scaduto per cercare una porta libera\n");
+            printf("Porta occupata\n");
             close(sock_stat.sockFD);
             exit(EXIT_FAILURE);
         }
@@ -106,7 +119,7 @@ int main()
 
     signal(SIGINT, gestione_segnale);
 
-    socketfd = BindSocket(INADDR_ANY, &server_port, 1).sockFD;
+    socketfd = BindSocket(INADDR_ANY, &server_port, 1, FALSE).sockFD;
     printf("File descriptor socket: %d\n", socketfd);
 
     while (TRUE)
@@ -148,7 +161,7 @@ int main()
             {
                 close(fd[PIPE_READ]);
 
-                socketfd = BindSocket(INADDR_ANY, &server_port, 1).sockFD;
+                socketfd = BindSocket(INADDR_ANY, &server_port, 1, TRUE).sockFD;
 
                 write(fd[PIPE_WRITE], &server_port, sizeof(server_port));
                 close(fd[PIPE_WRITE]);
