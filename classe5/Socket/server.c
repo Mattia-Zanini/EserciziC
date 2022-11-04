@@ -10,6 +10,8 @@
 #include <arpa/inet.h>
 #include <time.h>
 
+#define MAX_TIME_RETRY 5.0
+
 #define BUFFER_DIM 1024
 #define SERVERPORT 49152
 
@@ -76,7 +78,7 @@ socket_status_t BindSocket(int addr, int *port, int nClients, int retry)
                 break;
 
             // controlla che non impieghi troppo tempo per instaurare la connessione
-            if ((((double)(clock() - t)) / CLOCKS_PER_SEC) > 5.0)
+            if ((((double)(clock() - t)) / CLOCKS_PER_SEC) > MAX_TIME_RETRY)
             {
                 printf("Tempo scaduto per cercare una porta libera\n");
                 close(sock_stat.sockFD);

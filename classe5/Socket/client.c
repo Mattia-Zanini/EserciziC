@@ -10,6 +10,8 @@
 #define DIM 1024
 #define SERVERPORT 49152
 
+#define MAX_TIME_RETRY 6.0
+
 int main()
 {
     struct sockaddr_in server_remote;
@@ -46,7 +48,7 @@ int main()
     {
         stat = connect(socketfd, (struct sockaddr *)&server_remote, sizeof(server_remote));
         // printf("Stato connessione %d\n", stat);
-        if ((((double)(clock() - t)) / CLOCKS_PER_SEC) > 6.0) // controlla che non impieghi troppo tempo per instaurare la connessione
+        if ((((double)(clock() - t)) / CLOCKS_PER_SEC) > MAX_TIME_RETRY) // controlla che non impieghi troppo tempo per instaurare la connessione
         {
             printf("Tempo scaduto\n");
             close(socketfd);
