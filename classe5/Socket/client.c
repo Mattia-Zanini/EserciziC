@@ -8,7 +8,7 @@
 #include <time.h>
 
 #define DIM 1024
-#define SERVERPORT 49152
+#define SERVERPORT 49153
 
 #define MAX_TIME_RETRY 6.0
 

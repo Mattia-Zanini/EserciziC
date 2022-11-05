@@ -4,7 +4,6 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
-#include <error.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -13,7 +12,8 @@
 #define MAX_TIME_RETRY 5.0
 
 #define BUFFER_DIM 1024
-#define SERVERPORT 49152
+#define SERVERPORT 49153
+#define MAX_PORT_NUMBER 65535
 
 #define TRUE 1
 #define FALSE 0
@@ -70,7 +70,7 @@ socket_status_t BindSocket(int addr, int *port, int nClients, int retry)
                 if ((sock_stat.sockFD = socket(AF_INET, SOCK_STREAM, 0)) < 3)
                     perror("socket");
                 (*port)++;
-                if (*port > 65535)
+                if (*port > MAX_PORT_NUMBER)
                     (*port) = SERVERPORT + 1;
                 sock.sin_port = htons(*port);
             }
