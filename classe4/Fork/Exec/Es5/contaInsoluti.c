@@ -7,8 +7,10 @@
 #define READ 0
 #define WRITE 1
 
-int main(int argc, char *argv[]) {
-  if (argc != 2) { // argomenti insufficienti
+int main(int argc, char *argv[])
+{
+  if (argc != 2)
+  { // argomenti insufficienti
     printf("Argomenti errati\n");
     exit(0);
   }
@@ -18,18 +20,21 @@ int main(int argc, char *argv[]) {
   pipe(p1p0);
   pipe(p2p0);
 
-  while (1) {
+  while (1)
+  {
     printf("Inserisci codice:\n");
     scanf("%s", codice);
 
-    if (strcmp("esci", codice) == 0) { // l'utente vuole uscire dal programma
+    if (strcmp("esci", codice) == 0)
+    { // l'utente vuole uscire dal programma
       printf("Sono stati trovati in totale: %d insoluti\n", tot);
       exit(0);
     }
 
     p1 = fork();
 
-    if (p1 == 0) { // figlio 1
+    if (p1 == 0)
+    { // figlio 1
       close(1);
       dup(p1p0[WRITE]);
       close(p1p0[READ]);
@@ -37,19 +42,23 @@ int main(int argc, char *argv[]) {
 
       execl("/bin/grep", "grep", "-c", codice, argv[1], NULL);
     }
-    if (p1 < 0) { // problemi con il bocia
+    if (p1 < 0)
+    { // problemi con il bocia
       printf("Errore durante la generazione del primo figlio");
     }
-    if (p1 > 0) { // padre
+    if (p1 > 0)
+    { // padre
       wait(&p1);
       read(p1p0[READ], ris, sizeof(ris));
       printf("Sono state trovate %d occorrenze\n", atoi(ris));
 
-      if (atoi(ris) == 0) {
+      if (atoi(ris) == 0)
+      {
         printf("Codice non trovato\n");
       }
       p2 = fork();
-      if (p2 == 0) { // figlio 2
+      if (p2 == 0)
+      { // figlio 2
         close(1);
         dup(p2p0[WRITE]);
         close(p2p0[READ]);
@@ -58,10 +67,12 @@ int main(int argc, char *argv[]) {
         execl("/bin/grep", "grep", "-c", strcat(codice, " insoluto"), argv[1],
               NULL);
       }
-      if (p2 < 0) { // problemi con il bocia
+      if (p2 < 0)
+      { // problemi con il bocia
         printf("Errore durante la generazione del secondo figlio");
       }
-      if (p2 > 0) { // padre
+      if (p2 > 0)
+      { // padre
         wait(&p2);
         read(p2p0[READ], stringa, sizeof(stringa));
         printf("Sono stati trovati %d insoluti\n", atoi(stringa));

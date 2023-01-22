@@ -8,7 +8,8 @@
 #define WRITE 1
 #define ARRAY_SIZE 30
 
-int main() {
+int main()
+{
   // int err = open("error.txt", O_WRONLY | O_CREAT);
 
   int fd[2];
@@ -24,7 +25,9 @@ int main() {
     // sleep(30);
     execl("/bin/cat", "cat", "file.txt", NULL);
     exit(0);
-  } else if (p1 > 0) {
+  }
+  else if (p1 > 0)
+  {
     int fd2[2];
     pipe(fd2);
     int p2 = fork();
@@ -46,7 +49,9 @@ int main() {
       // sleep(6);
       execl("/bin/wc", "wc", NULL);
       exit(0);
-    } else if (p2 > 0) {
+    }
+    else if (p2 > 0)
+    {
       close(fd[0]);
       close(fd[1]);
 
@@ -71,7 +76,8 @@ int main() {
 
       // scrive sul stdout
       char x = getc(stdin);
-      while (x != EOF) {
+      while (x != EOF)
+      {
         printf("%c", x);
         x = getc(stdin);
       }

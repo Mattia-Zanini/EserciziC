@@ -9,7 +9,8 @@
 
 // traceroute google.com | awk '{print $4}' | tail -n +2
 
-int main() {
+int main()
+{
   int p1, p2, p3, p1p2[2], p2p3[2], p3p0[2];
   char *ptr, buffer[1], valore[100];
   double tot = 0;
@@ -25,7 +26,9 @@ int main() {
 
     execl("/bin/traceroute", "traceroute", "google.com", NULL);
     return -1;
-  } else {
+  }
+  else
+  {
     pipe(p2p3);
     p2 = fork();
     if (p2 == 0) // awk
@@ -42,10 +45,13 @@ int main() {
 
       execl("/bin/awk", "awk", "{print $4}", NULL);
       return -1;
-    } else {
+    }
+    else
+    {
       pipe(p3p0);
       p3 = fork(); // tail -n +2
-      if (p3 == 0) {
+      if (p3 == 0)
+      {
         close(R); // stdin
         dup(p2p3[R]);
         close(p2p3[W]);
@@ -62,7 +68,8 @@ int main() {
 
         execl("/bin/tail", "tail", "-n", "+2", NULL);
         return -1;
-      } else // padre
+      }
+      else // padre
       {
         close(p1p2[W]);
         close(p1p2[R]);
@@ -73,8 +80,10 @@ int main() {
         wait(&p3);
         int nread = 0;
 
-        while ((nread = read(p3p0[0], buffer, 1)) > 0) {
-          if (buffer[0] == '\n') {
+        while ((nread = read(p3p0[0], buffer, 1)) > 0)
+        {
+          if (buffer[0] == '\n')
+          {
             tot = tot + strtod(valore, &ptr);
             valore[0] = '\0';
           }
