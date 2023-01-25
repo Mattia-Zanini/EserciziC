@@ -1,5 +1,8 @@
 /*
-Questo codice utilizza la funzione realloc per creare un array dinamico che può crescere di dimensione ogni volta che l'utente inserisce un nuovo numero. L'utente continua ad immettere numeri fino a quando non inserisce 0, e alla fine del programma vengono stampati tutti i numeri immessi. La funzione free() viene utilizzata per liberare la memoria allocata per l'array dinamico alla fine del programma.
+Questo codice utilizza la funzione realloc per creare un array dinamico che può crescere di dimensione ogni volta
+che l'utente inserisce un nuovo numero. L'utente continua ad immettere numeri fino a quando non inserisce 0, e alla
+fine del programma vengono stampati tutti i numeri immessi. La funzione free() viene utilizzata per liberare la memoria
+allocata per l'array dinamico alla fine del programma.
 */
 
 /* realloc example: rememb-o-matic */
