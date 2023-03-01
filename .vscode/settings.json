@@ -1,6 +1,7 @@
 {
   "keyboard.dispatch": "keyCode",
   "files.associations": {
+    "*.embeddedhtml": "html",
     "sstream": "c",
     "fun.h": "c",
     "functions.h": "c",
@@ -14,7 +15,10 @@
     "__locale": "c",
     "fcntl.h": "c",
     "in.h": "c",
-    "unistd.h": "c"
+    "unistd.h": "c",
+    "cstdlib": "c",
+    "math.h": "c",
+    "curses.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "/usr/bin/gcc",
   "C_Cpp_Runner.cppCompilerPath": "/usr/bin/g++",
@@ -43,5 +47,6 @@
     "**/.*/**",
     "**/.vscode",
     "**/.vscode/**"
-  ]
+  ],
+  "python.analysis.typeCheckingMode": "basic"
 }
