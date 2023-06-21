@@ -18,7 +18,8 @@
     "unistd.h": "c",
     "cstdlib": "c",
     "math.h": "c",
-    "curses.h": "c"
+    "curses.h": "c",
+    "inet.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "/usr/bin/gcc",
   "C_Cpp_Runner.cppCompilerPath": "/usr/bin/g++",
